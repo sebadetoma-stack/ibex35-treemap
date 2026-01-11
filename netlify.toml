@@ -1,5 +1,5 @@
 [build]
-  command = "python update_ibex_data.py && mv ibex35_treemap.html index.html"
+  command = "python update_ibex_data.py"
   publish = "."
 
 [[headers]]
