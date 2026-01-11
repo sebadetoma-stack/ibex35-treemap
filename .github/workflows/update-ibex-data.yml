@@ -2,10 +2,8 @@ name: Update IBEX 35 Data
 
 on:
   schedule:
-    # Corre cada 15 minutos durante horario de mercado (9:00-17:30 CET)
-    # En UTC eso es 8:00-16:30 (horario de invierno) o 7:00-15:30 (horario de verano)
     - cron: '*/15 7-16 * * 1-5'
-  workflow_dispatch: # Permite ejecutar manualmente
+  workflow_dispatch:
 
 jobs:
   update-data:
@@ -21,12 +19,10 @@ jobs:
           python-version: '3.11'
       
       - name: Install dependencies
-        run: |
-          pip install --break-system-packages yfinance
+        run: pip install --break-system-packages yfinance
       
       - name: Update IBEX data
-        run: |
-          python update_ibex_data.py
+        run: python update_ibex_data.py
       
       - name: Check for changes
         id: check_changes
@@ -45,8 +41,3 @@ jobs:
           git add ibex_data.json
           git commit -m "Auto-update IBEX 35 data - $(date +'%Y-%m-%d %H:%M')"
           git push
-```
-
-**6. Scroll abajo y en "Commit message" escribí:**
-```
-   Add automatic data update workflow
