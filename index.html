@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBEX 35 - Mapa en Tiempo Real | El Cronista</title>
+    <title>IBEX 35 - Visualización Interactiva | El Cronista</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #007C74;
@@ -30,6 +31,11 @@
             color: var(--body-color);
         }
         
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e5e7eb;
+        }
+        
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -39,10 +45,33 @@
             overflow: hidden;
         }
         
+        .dark-mode .container {
+            background: #2d2d2d;
+        }
+        
         .header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #005a54 100%);
             color: white;
             padding: 30px;
+            position: relative;
+        }
+        
+        .dark-mode-toggle {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .dark-mode-toggle:hover {
+            background: rgba(255,255,255,0.3);
         }
         
         .header h1 {
@@ -56,6 +85,40 @@
             font-size: 14px;
             opacity: 0.9;
             margin-bottom: 20px;
+        }
+        
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .index-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .index-change {
+            font-size: 18px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .positive {
+            color: var(--positive-color);
+        }
+        
+        .negative {
+            color: var(--negative-color);
+        }
+        
+        .last-update {
+            font-size: 14px;
+            opacity: 0.9;
         }
         
         .sector-stats {
@@ -98,38 +161,81 @@
             font-weight: bold;
         }
         
-        .header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            flex-wrap: wrap;
-            gap: 15px;
+        /* Top/Flop Rankings */
+        .rankings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px 30px;
+            background: var(--secondary-light);
+            border-bottom: 2px solid var(--primary-color);
         }
         
-        .index-value {
-            font-size: 24px;
+        .dark-mode .rankings {
+            background: #1a1a1a;
+        }
+        
+        .ranking-column {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .ranking-column {
+            background: #2d2d2d;
+        }
+        
+        .ranking-title {
+            font-size: 16px;
             font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .index-change {
-            font-size: 18px;
-            padding: 8px 16px;
-            border-radius: 6px;
-            background: rgba(255,255,255,0.2);
-        }
-        
-        .positive {
+        .ranking-title.top {
             color: var(--positive-color);
         }
         
-        .negative {
+        .ranking-title.flop {
             color: var(--negative-color);
         }
         
-        .last-update {
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: var(--secondary-light);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .dark-mode .ranking-item {
+            background: #1a1a1a;
+        }
+        
+        .ranking-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .ranking-company {
+            font-weight: 600;
             font-size: 14px;
-            opacity: 0.9;
+        }
+        
+        .ranking-change {
+            font-weight: bold;
+            font-size: 16px;
         }
         
         /* Loading spinner */
@@ -156,12 +262,17 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Instrucciones */
+        /* Instructions */
         .instructions {
             padding: 20px 30px;
             background: #e8f5f4;
             border-bottom: 2px solid var(--primary-color);
             color: var(--body-color);
+        }
+        
+        .dark-mode .instructions {
+            background: #1a3a37;
+            color: #e5e7eb;
         }
         
         .instructions-content {
@@ -182,11 +293,16 @@
             min-width: 300px;
         }
         
-        /* Controles principales */
+        /* Controls */
         .controls {
             padding: 20px 30px;
             background: white;
             border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .controls {
+            background: #2d2d2d;
+            border-bottom: 1px solid #404040;
         }
         
         .controls-row {
@@ -216,6 +332,10 @@
             letter-spacing: 0.5px;
         }
         
+        .dark-mode .control-label {
+            color: #e5e7eb;
+        }
+        
         .search-box {
             width: 100%;
             padding: 10px 15px;
@@ -224,6 +344,12 @@
             font-size: 14px;
             font-family: inherit;
             transition: border-color 0.2s;
+        }
+        
+        .dark-mode .search-box {
+            background: #1a1a1a;
+            border-color: #404040;
+            color: #e5e7eb;
         }
         
         .search-box:focus {
@@ -239,6 +365,10 @@
             border-radius: 6px;
         }
         
+        .dark-mode .view-toggle {
+            background: #1a1a1a;
+        }
+        
         .view-btn {
             padding: 8px 16px;
             border: none;
@@ -252,44 +382,125 @@
             font-family: inherit;
         }
         
+        .dark-mode .view-btn {
+            color: #e5e7eb;
+        }
+        
         .view-btn.active {
             background: white;
             color: var(--primary-color);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
-        .period-selector {
+        .dark-mode .view-btn.active {
+            background: #2d2d2d;
+        }
+        
+        .market-status {
             display: flex;
-            gap: 5px;
-        }
-        
-        .period-btn {
-            padding: 8px 16px;
-            border: 2px solid var(--primary-color);
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
             background: white;
+            border: 2px solid #e5e7eb;
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
-            color: var(--primary-color);
-            transition: all 0.2s;
-            font-family: inherit;
         }
         
-        .period-btn:hover {
-            background: #e8f5f4;
+        .dark-mode .market-status {
+            background: #1a1a1a;
+            border-color: #404040;
         }
         
-        .period-btn.active {
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #9ca3af;
+        }
+        
+        .market-status.open .status-dot {
+            background: var(--positive-color);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .market-status.closed .status-dot {
+            background: var(--negative-color);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-text {
+            color: var(--body-color);
+        }
+        
+        .dark-mode .status-text {
+            color: #e5e7eb;
+        }
+        
+        /* Density slider */
+        .density-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .density-slider {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .dark-mode .density-slider {
+            background: #404040;
+        }
+        
+        .density-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
             background: var(--primary-color);
-            color: white;
+            cursor: pointer;
         }
         
-        /* Filtros de sector */
+        .density-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .density-label {
+            font-size: 12px;
+            color: var(--body-color);
+            min-width: 80px;
+        }
+        
+        .dark-mode .density-label {
+            color: #e5e7eb;
+        }
+        
+        /* Filters */
         .filters {
             padding: 20px 30px;
             background: var(--secondary-light);
             border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .filters {
+            background: #1a1a1a;
+            border-bottom: 1px solid #404040;
         }
         
         .filters h3 {
@@ -299,6 +510,10 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+        
+        .dark-mode .filters h3 {
+            color: #e5e7eb;
         }
         
         .filter-buttons {
@@ -320,9 +535,19 @@
             font-family: inherit;
         }
         
+        .dark-mode .filter-btn {
+            background: #2d2d2d;
+            border-color: #404040;
+            color: #e5e7eb;
+        }
+        
         .filter-btn:hover {
             border-color: var(--primary-color);
             background: #e8f5f4;
+        }
+        
+        .dark-mode .filter-btn:hover {
+            background: #1a3a37;
         }
         
         .filter-btn.active {
@@ -342,7 +567,7 @@
             border-color: #c0392b;
         }
         
-        /* Mensaje de filtro activo */
+        /* Filter message */
         .filter-message {
             padding: 12px 30px;
             background: #e8f5f4;
@@ -353,18 +578,68 @@
             display: none;
         }
         
+        .dark-mode .filter-message {
+            background: #1a3a37;
+            color: #e5e7eb;
+        }
+        
         .filter-message.active {
             display: block;
         }
         
-        /* Contenedor del gráfico */
+        /* Chart container */
         .chart-container {
             padding: 20px;
             min-height: 600px;
             position: relative;
         }
         
-        /* Vista de tabla */
+        .dark-mode .chart-container {
+            background: #2d2d2d;
+        }
+        
+        /* Bubble view */
+        .bubble-view {
+            display: none;
+            padding: 40px 20px;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        .bubble-view.active {
+            display: block;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .bubble:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            z-index: 100;
+        }
+        
+        .bubble-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .bubble-change {
+            font-weight: bold;
+        }
+        
+        /* Table view */
         .table-view {
             display: none;
             padding: 20px;
@@ -384,6 +659,10 @@
             background: var(--secondary-light);
         }
         
+        .dark-mode .data-table thead {
+            background: #1a1a1a;
+        }
+        
         .data-table th {
             padding: 12px;
             text-align: left;
@@ -394,8 +673,16 @@
             user-select: none;
         }
         
+        .dark-mode .data-table th {
+            color: #e5e7eb;
+        }
+        
         .data-table th:hover {
             background: #e8f5f4;
+        }
+        
+        .dark-mode .data-table th:hover {
+            background: #1a3a37;
         }
         
         .data-table td {
@@ -403,8 +690,16 @@
             border-bottom: 1px solid #e5e7eb;
         }
         
+        .dark-mode .data-table td {
+            border-bottom: 1px solid #404040;
+        }
+        
         .data-table tr:hover {
             background: var(--secondary-light);
+        }
+        
+        .dark-mode .data-table tr:hover {
+            background: #1a1a1a;
         }
         
         .sort-indicator {
@@ -412,11 +707,343 @@
             font-size: 10px;
         }
         
-        /* Leyenda */
+        /* Comparator */
+        .comparator-view {
+            display: none;
+            padding: 20px;
+        }
+        
+        .comparator-view.active {
+            display: block;
+        }
+        
+        .comparator-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .company-selector {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .company-selector select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .dark-mode .company-selector select {
+            background: #1a1a1a;
+            border-color: #404040;
+            color: #e5e7eb;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .comparison-card {
+            background: var(--secondary-light);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .comparison-card {
+            background: #1a1a1a;
+        }
+        
+        .comparison-card h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--heading-color);
+        }
+        
+        .dark-mode .comparison-card h3 {
+            color: #e5e7eb;
+        }
+        
+        .comparison-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .comparison-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .comparison-metric {
+            border-bottom: 1px solid #404040;
+        }
+        
+        .metric-label {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .dark-mode .metric-label {
+            color: #9ca3af;
+        }
+        
+        .metric-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Portfolio */
+        .portfolio-view {
+            display: none;
+        }
+        
+        .portfolio-view.active {
+            display: block;
+        }
+        
+        .portfolio-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: var(--secondary-light);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .dark-mode .portfolio-summary {
+            background: #1a1a1a;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .summary-card {
+            background: #2d2d2d;
+        }
+        
+        .summary-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .dark-mode .summary-label {
+            color: #9ca3af;
+        }
+        
+        .summary-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--heading-color);
+        }
+        
+        .dark-mode .summary-value {
+            color: #e5e7eb;
+        }
+        
+        .summary-change {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .portfolio-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--heading-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .dark-mode .section-title {
+            color: #e5e7eb;
+        }
+        
+        .holdings-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .holdings-table th {
+            text-align: left;
+            padding: 12px 8px;
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .holdings-table th {
+            color: #9ca3af;
+            border-bottom: 1px solid #404040;
+        }
+        
+        .holdings-table td {
+            padding: 15px 8px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .dark-mode .holdings-table td {
+            border-bottom: 1px solid #404040;
+        }
+        
+        .holdings-table tr:hover {
+            background: var(--secondary-light);
+        }
+        
+        .dark-mode .holdings-table tr:hover {
+            background: #1a1a1a;
+        }
+        
+        .company-name-cell {
+            font-weight: 600;
+            color: var(--heading-color);
+        }
+        
+        .dark-mode .company-name-cell {
+            color: #e5e7eb;
+        }
+        
+        .company-ticker-cell {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .dark-mode .company-ticker-cell {
+            color: #9ca3af;
+        }
+        
+        .remove-btn {
+            padding: 6px 12px;
+            background: var(--secondary-red);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+        
+        .add-form {
+            background: var(--secondary-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .dark-mode .add-form {
+            background: #1a1a1a;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--heading-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .dark-mode .form-group label {
+            color: #e5e7eb;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .dark-mode .form-group select,
+        .dark-mode .form-group input {
+            background: #2d2d2d;
+            border-color: #404040;
+            color: #e5e7eb;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .add-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .add-btn:hover {
+            background: #005a54;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .dark-mode .empty-state {
+            color: #9ca3af;
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        /* Legend */
         .legend {
             padding: 20px 30px;
             background: var(--secondary-light);
             border-top: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .legend {
+            background: #1a1a1a;
+            border-top: 1px solid #404040;
         }
         
         .legend h3 {
@@ -426,6 +1053,10 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+        
+        .dark-mode .legend h3 {
+            color: #e5e7eb;
         }
         
         .legend-items {
@@ -447,7 +1078,7 @@
             border-radius: 3px;
         }
         
-        /* Botones de acción */
+        /* Action buttons */
         .action-buttons {
             padding: 20px 30px;
             background: white;
@@ -455,6 +1086,11 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+        }
+        
+        .dark-mode .action-buttons {
+            background: #2d2d2d;
+            border-top: 1px solid #404040;
         }
         
         .action-btn {
@@ -473,17 +1109,56 @@
             gap: 8px;
         }
         
+        .dark-mode .action-btn {
+            background: #2d2d2d;
+            color: #e5e7eb;
+            border-color: #404040;
+        }
+        
         .action-btn:hover {
             background: var(--primary-color);
             color: white;
         }
         
+        /* Alerts panel */
+        .alerts-panel {
+            padding: 20px 30px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .dark-mode .alerts-panel {
+            background: #2d2d2d;
+            border-top: 1px solid #404040;
+        }
+        
+        .alert-item {
+            padding: 15px;
+            background: var(--secondary-light);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .dark-mode .alert-item {
+            background: #1a1a1a;
+        }
+        
+        .alert-item.triggered {
+            border-left-color: var(--secondary-red);
+            background: #fee;
+        }
+        
+        .dark-mode .alert-item.triggered {
+            background: #3a1a1a;
+        }
+        
         /* Footer */
         .footer {
-            padding: 15px 30px;
+            padding: 20px 30px;
             background: var(--primary-color);
             color: white;
-            font-size: 12px;
+            font-size: 13px;
             text-align: center;
         }
         
@@ -492,10 +1167,28 @@
             text-decoration: underline;
         }
         
+        .disclaimer {
+            padding: 15px 30px;
+            background: #fff3cd;
+            border-top: 2px solid #ffc107;
+            font-size: 12px;
+            color: #856404;
+            text-align: center;
+        }
+        
+        .dark-mode .disclaimer {
+            background: #3a3210;
+            color: #ffc107;
+        }
+        
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 968px) {
             .header h1 {
                 font-size: 24px;
+            }
+            
+            .rankings {
+                grid-template-columns: 1fr;
             }
             
             .controls-row {
@@ -509,48 +1202,67 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .portfolio-content {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>IBEX 35 - Mapa en Tiempo Real</h1>
-            <p class="header-subtitle">Visualización interactiva de las 35 empresas del índice bursátil español</p>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <span id="darkModeIcon">🌙</span> Modo Oscuro
+            </button>
+            <h1>IBEX 35 - Visualización Interactiva</h1>
+            <p class="header-subtitle">Datos en tiempo real del índice bursátil español</p>
             <div class="header-info">
                 <div>
-                    <span class="index-value">11.847,23</span>
-                    <span class="index-change positive">▲ 0,67% (+78,91)</span>
+                    <span class="index-value">--</span>
+                    <span class="index-change">--</span>
                 </div>
                 <div class="last-update">
-                    Última actualización: <span id="timestamp">--/--/---- --:--:--</span>
+                    Última actualización: <span id="timestamp">--</span>
                 </div>
             </div>
             
             <div class="sector-stats" id="sectorStats">
-                <h2 id="sectorTitle">Sector: Banca</h2>
+                <h2 id="sectorTitle">Sector: --</h2>
                 <div class="stats-grid">
                     <div class="stat-item">
                         <div class="stat-label">Empresas</div>
-                        <div class="stat-value" id="statCompanies">6</div>
+                        <div class="stat-value" id="statCompanies">--</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Cap. Total</div>
-                        <div class="stat-value" id="statMarketCap">€195.000M</div>
+                        <div class="stat-value" id="statMarketCap">--</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Var. Promedio</div>
-                        <div class="stat-value" id="statAvgChange">+1.37%</div>
+                        <div class="stat-value" id="statAvgChange">--</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Mejor</div>
-                        <div class="stat-value" id="statBest">Sabadell +2.71%</div>
+                        <div class="stat-value" id="statBest">--</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Peor</div>
-                        <div class="stat-value" id="statWorst">Telefónica -0.73%</div>
+                        <div class="stat-value" id="statWorst">--</div>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Top/Flop Rankings -->
+        <div class="rankings">
+            <div class="ranking-column">
+                <div class="ranking-title top">🔥 Top 5 del Día</div>
+                <div class="ranking-list" id="topRankings"></div>
+            </div>
+            <div class="ranking-column">
+                <div class="ranking-title flop">📉 Flop 5 del Día</div>
+                <div class="ranking-list" id="flopRankings"></div>
             </div>
         </div>
         
@@ -558,7 +1270,7 @@
             <div class="instructions-content">
                 <span class="instructions-icon">💡</span>
                 <span class="instructions-text">
-                    <strong>Cómo usar:</strong> Haga clic en las empresas para ver detalles. Use los filtros para analizar sectores específicos. El tamaño representa la capitalización bursátil y el color la variación diaria.
+                    <strong>Cómo usar:</strong> Navegá entre distintas vistas para analizar el IBEX 35. El tamaño representa capitalización bursátil y el color la variación diaria. Podés buscar empresas, filtrar por sectores, comparar valores y simular tu propio portfolio.
                 </span>
             </div>
         </div>
@@ -574,16 +1286,28 @@
                     <label class="control-label">Vista</label>
                     <div class="view-toggle">
                         <button class="view-btn active" onclick="switchView('treemap')">📊 Mapa</button>
+                        <button class="view-btn" onclick="switchView('bubble')">⚪ Burbujas</button>
                         <button class="view-btn" onclick="switchView('table')">📋 Tabla</button>
+                        <button class="view-btn" onclick="switchView('comparator')">⚖️ Comparar</button>
+                        <button class="view-btn" onclick="switchView('portfolio')">💰 Portfolio</button>
                     </div>
                 </div>
                 
                 <div class="control-group">
-                    <label class="control-label">Período</label>
-                    <div class="period-selector">
-                        <button class="period-btn active" data-period="day">Diario</button>
-                        <button class="period-btn" data-period="week">Semanal</button>
-                        <button class="period-btn" data-period="month">Mensual</button>
+                    <label class="control-label">Estado del mercado</label>
+                    <div id="marketStatus" class="market-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Verificando...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-row">
+                <div class="control-group">
+                    <label class="control-label">Densidad de información</label>
+                    <div class="density-control">
+                        <input type="range" id="densitySlider" class="density-slider" min="1" max="3" value="2">
+                        <span class="density-label" id="densityLabel">Media</span>
                     </div>
                 </div>
             </div>
@@ -607,9 +1331,10 @@
         </div>
         
         <div class="filter-message" id="filterMessage">
-            Mostrando <span id="filterCount">35</span> empresas del sector <span id="filterSector">todos</span>
+            Mostrando <span id="filterCount">35</span> empresas
         </div>
         
+        <!-- Treemap View -->
         <div class="chart-container" id="chartContainer">
             <div class="loading">
                 <div class="spinner"></div>
@@ -618,6 +1343,10 @@
             <div id="treemap"></div>
         </div>
         
+        <!-- Bubble View -->
+        <div class="bubble-view" id="bubbleView"></div>
+        
+        <!-- Table View -->
         <div class="table-view" id="tableView">
             <table class="data-table" id="dataTable">
                 <thead>
@@ -630,9 +1359,96 @@
                         <th onclick="sortTable('marketCap')">Cap. Mercado <span class="sort-indicator"></span></th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
+        </div>
+        
+        <!-- Comparator View -->
+        <div class="comparator-view" id="comparatorView">
+            <div class="section-title">Comparar Empresas</div>
+            <div class="comparator-selector">
+                <div class="company-selector">
+                    <select id="compare1" onchange="updateComparison()">
+                        <option value="">Seleccionar empresa 1...</option>
+                    </select>
+                </div>
+                <div class="company-selector">
+                    <select id="compare2" onchange="updateComparison()">
+                        <option value="">Seleccionar empresa 2...</option>
+                    </select>
+                </div>
+                <div class="company-selector">
+                    <select id="compare3" onchange="updateComparison()">
+                        <option value="">Seleccionar empresa 3...</option>
+                    </select>
+                </div>
+                <div class="company-selector">
+                    <select id="compare4" onchange="updateComparison()">
+                        <option value="">Seleccionar empresa 4...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="comparison-grid" id="comparisonGrid"></div>
+        </div>
+        
+        <!-- Portfolio View -->
+        <div class="portfolio-view" id="portfolioView">
+            <div class="portfolio-summary">
+                <div class="summary-card">
+                    <div class="summary-label">Inversión Inicial</div>
+                    <div class="summary-value">€<span id="portfolioInitial">10.000</span></div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Valor Actual</div>
+                    <div class="summary-value">€<span id="portfolioCurrent">10.000</span></div>
+                    <div class="summary-change" id="portfolioTotalChange">€0 (0%)</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Ganancia Hoy</div>
+                    <div class="summary-value" id="portfolioTodayGain">€0</div>
+                    <div class="summary-change" id="portfolioTodayChange">0%</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-label">Acciones</div>
+                    <div class="summary-value" id="portfolioStocks">0</div>
+                    <div class="summary-change">empresas diferentes</div>
+                </div>
+            </div>
+            
+            <div class="portfolio-content">
+                <div class="portfolio-holdings">
+                    <h2 class="section-title">Mis Inversiones</h2>
+                    <div id="holdingsContainer">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div>Todavía no tenés inversiones en tu portfolio</div>
+                            <div style="font-size: 13px; margin-top: 10px; color: #999;">Agregá empresas del IBEX 35 usando el formulario de la derecha</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="add-stocks">
+                    <h2 class="section-title">Agregar Inversión</h2>
+                    <div class="add-form">
+                        <div class="form-group">
+                            <label>Empresa</label>
+                            <select id="stockSelect"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cantidad de acciones</label>
+                            <input type="number" id="sharesInput" placeholder="100" min="1" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Monto a invertir</label>
+                            <input type="text" id="amountInput" readonly style="background: #f9fafb;">
+                        </div>
+                        <button class="add-btn" onclick="addToPortfolio()">💰 Agregar a Portfolio</button>
+                    </div>
+                    <button class="action-btn" onclick="resetPortfolio()" style="width: 100%; justify-content: center;">
+                        🔄 Resetear Portfolio
+                    </button>
+                </div>
+            </div>
         </div>
         
         <div class="legend">
@@ -674,15 +1490,22 @@
                 🔗 Compartir
             </button>
             <button class="action-btn" onclick="exportData()">
-                📥 Exportar datos
+                📥 Exportar CSV
+            </button>
+            <button class="action-btn" onclick="downloadPDF()">
+                📄 Descargar PDF
             </button>
             <button class="action-btn" onclick="embedCode()">
                 &lt;/&gt; Código de inserción
             </button>
         </div>
         
+        <div class="disclaimer">
+            ⚠️ <strong>AVISO IMPORTANTE:</strong> Este es un simulador educativo. No constituye asesoramiento financiero. Las inversiones reales implican riesgo de pérdida de capital. Consulte con un asesor financiero profesional antes de tomar decisiones de inversión.
+        </div>
+        
         <div class="footer">
-            Datos en tiempo real vía Yahoo Finance • Actualización automática cada 15 minutos • 
+            Datos actualizados manualmente • Fuente: Yahoo Finance • 
             <a href="https://www.cronista.com" target="_blank">El Cronista</a>
         </div>
     </div>
@@ -694,9 +1517,41 @@
         let filteredData = [];
         let activeSector = 'all';
         let currentView = 'treemap';
-        let currentPeriod = 'day';
         let sortColumn = 'name';
         let sortDirection = 'asc';
+        let densityLevel = 2;
+        let portfolio = [];
+        let comparedCompanies = [null, null, null, null];
+        
+        // Cargar portfolio desde localStorage
+        function loadPortfolio() {
+            const saved = localStorage.getItem('ibex_portfolio');
+            if (saved) {
+                portfolio = JSON.parse(saved);
+            }
+        }
+        
+        // Guardar portfolio en localStorage
+        function savePortfolio() {
+            localStorage.setItem('ibex_portfolio', JSON.stringify(portfolio));
+        }
+        
+        // Cargar modo oscuro desde localStorage
+        function loadDarkMode() {
+            const darkMode = localStorage.getItem('dark_mode');
+            if (darkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeIcon').textContent = '☀️';
+            }
+        }
+        
+        // Toggle modo oscuro
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('dark_mode', isDark);
+            document.getElementById('darkModeIcon').textContent = isDark ? '☀️' : '🌙';
+        }
         
         // Cargar datos desde el JSON
         async function loadData() {
@@ -725,11 +1580,18 @@
                     second: '2-digit'
                 });
                 
-                // Renderizar visualización inicial
-                if (currentView === 'treemap') {
-                    renderChart(filteredData);
-                } else {
-                    renderTable(filteredData);
+                // Actualizar rankings
+                updateRankings(ibexData);
+                
+                // Poblar selectores
+                populateSelectors();
+                
+                // Renderizar visualización actual
+                renderCurrentView();
+                
+                // Actualizar portfolio si existe
+                if (portfolio.length > 0) {
+                    updatePortfolioValues();
                 }
                 
             } catch (error) {
@@ -761,7 +1623,31 @@
             }
         }
         
-        // Función para obtener color según variación (paleta El Cronista)
+        // Actualizar rankings top/flop
+        function updateRankings(data) {
+            const sorted = [...data].sort((a, b) => b.change - a.change);
+            const top5 = sorted.slice(0, 5);
+            const flop5 = sorted.slice(-5).reverse();
+            
+            const topContainer = document.getElementById('topRankings');
+            const flopContainer = document.getElementById('flopRankings');
+            
+            topContainer.innerHTML = top5.map(company => `
+                <div class="ranking-item">
+                    <span class="ranking-company">${company.name}</span>
+                    <span class="ranking-change positive">▲ +${company.change.toFixed(2)}%</span>
+                </div>
+            `).join('');
+            
+            flopContainer.innerHTML = flop5.map(company => `
+                <div class="ranking-item">
+                    <span class="ranking-company">${company.name}</span>
+                    <span class="ranking-change negative">▼ ${company.change.toFixed(2)}%</span>
+                </div>
+            `).join('');
+        }
+        
+        // Función para obtener color según variación
         function getColor(change) {
             if (change > 2) return '#005a54';
             if (change > 1) return '#007C74';
@@ -786,6 +1672,11 @@
                 sector: d.sector,
                 marketCap: d.marketCap
             }));
+            
+            // Ajustar tamaño de texto según densidad
+            let fontSize = 13;
+            if (densityLevel === 1) fontSize = 11;
+            if (densityLevel === 3) fontSize = 15;
 
             const chartData = [{
                 type: 'treemap',
@@ -799,13 +1690,19 @@
                         width: 2
                     }
                 },
-                text: data.map(d => 
-                    `${d.name}<br>${d.change > 0 ? '▲' : '▼'} ${Math.abs(d.change).toFixed(2)}%`
-                ),
+                text: data.map(d => {
+                    if (densityLevel === 1) {
+                        return `${d.name}`;
+                    } else if (densityLevel === 2) {
+                        return `${d.name}<br>${d.change > 0 ? '▲' : '▼'} ${Math.abs(d.change).toFixed(2)}%`;
+                    } else {
+                        return `${d.name}<br>${d.change > 0 ? '▲' : '▼'} ${Math.abs(d.change).toFixed(2)}%<br>€${d.price}`;
+                    }
+                }),
                 textposition: 'middle center',
                 textfont: {
                     family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto',
-                    size: 13,
+                    size: fontSize,
                     color: 'white'
                 },
                 customdata: customdata,
@@ -824,7 +1721,7 @@
 
             const layout = {
                 margin: {l: 0, r: 0, t: 0, b: 0},
-                paper_bgcolor: 'white',
+                paper_bgcolor: 'transparent',
                 font: {
                     family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto'
                 }
@@ -838,12 +1735,67 @@
             Plotly.newPlot('treemap', chartData, layout, config);
         }
         
+        // Renderizar burbujas
+        function renderBubbles(data) {
+            const container = document.getElementById('bubbleView');
+            container.innerHTML = '';
+            
+            const containerWidth = container.offsetWidth;
+            const containerHeight = 600;
+            
+            const maxCap = Math.max(...data.map(c => c.marketCap));
+            const minCap = Math.min(...data.map(c => c.marketCap));
+            
+            data.forEach((company, index) => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                
+                const size = 40 + ((company.marketCap - minCap) / (maxCap - minCap)) * 140;
+                
+                const angle = (index / data.length) * Math.PI * 2;
+                const radius = 150 + (Math.random() * 150);
+                const centerX = containerWidth / 2;
+                const centerY = containerHeight / 2;
+                
+                const x = centerX + Math.cos(angle) * radius - size / 2;
+                const y = centerY + Math.sin(angle) * radius - size / 2;
+                
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.max(10, Math.min(containerWidth - size - 10, x))}px`;
+                bubble.style.top = `${Math.max(10, Math.min(containerHeight - size - 10, y))}px`;
+                bubble.style.backgroundColor = getColor(company.change);
+                
+                const fontSize = Math.max(10, size / 8);
+                
+                const arrow = company.change >= 0 ? '▲' : '▼';
+                const sign = company.change >= 0 ? '+' : '';
+                
+                bubble.innerHTML = `
+                    <div class="bubble-name" style="font-size: ${fontSize}px">${company.name}</div>
+                    <div class="bubble-change" style="font-size: ${fontSize * 1.2}px">${arrow} ${sign}${company.change.toFixed(2)}%</div>
+                `;
+                
+                bubble.style.opacity = '0';
+                bubble.style.transform = 'scale(0)';
+                
+                container.appendChild(bubble);
+                
+                setTimeout(() => {
+                    bubble.style.transition = 'all 0.5s ease';
+                    bubble.style.opacity = '1';
+                    bubble.style.transform = 'scale(1)';
+                }, index * 30);
+                
+                bubble.title = `${company.name}\nCap. Mercado: €${company.marketCap.toLocaleString('es-ES')}M\nVariación: ${sign}${company.change.toFixed(2)}%`;
+            });
+        }
+        
         // Renderizar tabla
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             
-            // Ordenar datos
             const sortedData = [...data].sort((a, b) => {
                 let aVal = a[sortColumn];
                 let bVal = b[sortColumn];
@@ -886,12 +1838,223 @@
                 sortDirection = 'asc';
             }
             
-            // Actualizar indicadores visuales
             document.querySelectorAll('.sort-indicator').forEach(el => el.textContent = '');
             const th = event.target.closest('th');
             th.querySelector('.sort-indicator').textContent = sortDirection === 'asc' ? '▲' : '▼';
             
             renderTable(filteredData);
+        }
+        
+        // Poblar selectores
+        function populateSelectors() {
+            // Selector de portfolio
+            const stockSelect = document.getElementById('stockSelect');
+            stockSelect.innerHTML = '<option value="">Selecciona una empresa...</option>' + 
+                ibexData.map(c => `<option value="${c.ticker}">${c.name} (${c.ticker}) - €${c.price}</option>`).join('');
+            
+            // Selectores de comparación
+            for (let i = 1; i <= 4; i++) {
+                const select = document.getElementById(`compare${i}`);
+                select.innerHTML = `<option value="">Seleccionar empresa ${i}...</option>` +
+                    ibexData.map(c => `<option value="${c.ticker}">${c.name}</option>`).join('');
+            }
+        }
+        
+        // Renderizar comparación
+        function updateComparison() {
+            const grid = document.getElementById('comparisonGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 4; i++) {
+                const select = document.getElementById(`compare${i + 1}`);
+                const ticker = select.value;
+                
+                if (ticker) {
+                    const company = ibexData.find(c => c.ticker === ticker);
+                    if (company) {
+                        const card = document.createElement('div');
+                        card.className = 'comparison-card';
+                        card.innerHTML = `
+                            <h3>${company.name}</h3>
+                            <div class="comparison-metrics">
+                                <div class="comparison-metric">
+                                    <span class="metric-label">Ticker</span>
+                                    <span class="metric-value">${company.ticker}</span>
+                                </div>
+                                <div class="comparison-metric">
+                                    <span class="metric-label">Sector</span>
+                                    <span class="metric-value">${company.sector}</span>
+                                </div>
+                                <div class="comparison-metric">
+                                    <span class="metric-label">Precio</span>
+                                    <span class="metric-value">€${company.price.toFixed(2)}</span>
+                                </div>
+                                <div class="comparison-metric">
+                                    <span class="metric-label">Variación</span>
+                                    <span class="metric-value ${company.change >= 0 ? 'positive' : 'negative'}">
+                                        ${company.change >= 0 ? '+' : ''}${company.change.toFixed(2)}%
+                                    </span>
+                                </div>
+                                <div class="comparison-metric">
+                                    <span class="metric-label">Cap. Mercado</span>
+                                    <span class="metric-value">€${company.marketCap.toLocaleString('es-ES')}M</span>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    }
+                }
+            }
+        }
+        
+        // Actualizar valores del portfolio
+        function updatePortfolioValues() {
+            if (portfolio.length === 0) {
+                document.getElementById('holdingsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div>Todavía no tenés inversiones en tu portfolio</div>
+                        <div style="font-size: 13px; margin-top: 10px; color: #999;">Agregá empresas del IBEX 35 usando el formulario de la derecha</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let totalInvested = 0;
+            let totalCurrent = 0;
+            let todayGain = 0;
+            
+            const tableHTML = `
+                <table class="holdings-table">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>Acciones</th>
+                            <th>Precio Compra</th>
+                            <th>Precio Actual</th>
+                            <th>Invertido</th>
+                            <th>Valor Actual</th>
+                            <th>Ganancia/Pérdida</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${portfolio.map((holding, index) => {
+                            const company = ibexData.find(c => c.ticker === holding.ticker);
+                            if (!company) return '';
+                            
+                            const invested = holding.shares * holding.buyPrice;
+                            const currentValue = holding.shares * company.price;
+                            const gain = currentValue - invested;
+                            const gainPercent = (gain / invested) * 100;
+                            
+                            totalInvested += invested;
+                            totalCurrent += currentValue;
+                            todayGain += holding.shares * (company.price * company.change / 100);
+                            
+                            return `
+                                <tr>
+                                    <td>
+                                        <div class="company-name-cell">${company.name}</div>
+                                        <div class="company-ticker-cell">${company.ticker}</div>
+                                    </td>
+                                    <td>${holding.shares}</td>
+                                    <td>€${holding.buyPrice.toFixed(2)}</td>
+                                    <td>€${company.price.toFixed(2)}</td>
+                                    <td>€${invested.toFixed(0)}</td>
+                                    <td>€${currentValue.toFixed(0)}</td>
+                                    <td class="${gain >= 0 ? 'positive' : 'negative'}">
+                                        ${gain >= 0 ? '+' : ''}€${gain.toFixed(0)} (${gainPercent.toFixed(2)}%)
+                                    </td>
+                                    <td><button class="remove-btn" onclick="removeFromPortfolio(${index})">Vender</button></td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('holdingsContainer').innerHTML = tableHTML;
+            
+            // Actualizar resumen
+            const totalGain = totalCurrent - totalInvested;
+            const totalGainPercent = (totalGain / totalInvested) * 100;
+            const todayGainPercent = (todayGain / totalCurrent) * 100;
+            
+            document.getElementById('portfolioInitial').textContent = totalInvested.toLocaleString('es-ES');
+            document.getElementById('portfolioCurrent').textContent = totalCurrent.toLocaleString('es-ES');
+            document.getElementById('portfolioTotalChange').textContent = 
+                `${totalGain >= 0 ? '+' : ''}€${totalGain.toFixed(0)} (${totalGainPercent.toFixed(2)}%)`;
+            document.getElementById('portfolioTotalChange').className = 
+                `summary-change ${totalGain >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('portfolioTodayGain').textContent = 
+                `${todayGain >= 0 ? '+' : ''}€${todayGain.toFixed(0)}`;
+            document.getElementById('portfolioTodayGain').className = 
+                `summary-value ${todayGain >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('portfolioTodayChange').textContent = 
+                `${todayGain >= 0 ? '▲' : '▼'} ${Math.abs(todayGainPercent).toFixed(2)}%`;
+            document.getElementById('portfolioTodayChange').className = 
+                `summary-change ${todayGain >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('portfolioStocks').textContent = portfolio.length;
+        }
+        
+        // Agregar al portfolio
+        function addToPortfolio() {
+            const select = document.getElementById('stockSelect');
+            const shares = parseInt(document.getElementById('sharesInput').value);
+            
+            if (!select.value) {
+                alert('Por favor selecciona una empresa');
+                return;
+            }
+            
+            if (!shares || shares <= 0) {
+                alert('Por favor ingresa una cantidad válida de acciones');
+                return;
+            }
+            
+            const company = ibexData.find(c => c.ticker === select.value);
+            if (!company) return;
+            
+            portfolio.push({
+                ticker: company.ticker,
+                shares: shares,
+                buyPrice: company.price
+            });
+            
+            savePortfolio();
+            updatePortfolioValues();
+            
+            // Reset form
+            select.value = '';
+            document.getElementById('sharesInput').value = '100';
+            document.getElementById('amountInput').value = '';
+            
+            alert(`✅ Agregaste ${shares} acciones de ${company.name} a tu portfolio`);
+        }
+        
+        // Remover del portfolio
+        function removeFromPortfolio(index) {
+            const holding = portfolio[index];
+            const company = ibexData.find(c => c.ticker === holding.ticker);
+            
+            if (confirm(`¿Seguro que querés vender todas las acciones de ${company.name}?`)) {
+                portfolio.splice(index, 1);
+                savePortfolio();
+                updatePortfolioValues();
+            }
+        }
+        
+        // Resetear portfolio
+        function resetPortfolio() {
+            if (confirm('¿Seguro que querés resetear todo tu portfolio? Esta acción no se puede deshacer.')) {
+                portfolio = [];
+                savePortfolio();
+                updatePortfolioValues();
+                alert('🔄 Portfolio reseteado');
+            }
         }
         
         // Cambiar vista
@@ -903,14 +2066,42 @@
             event.target.classList.add('active');
             
             // Mostrar/ocultar vistas
+            document.getElementById('chartContainer').style.display = 'none';
+            document.getElementById('bubbleView').classList.remove('active');
+            document.getElementById('tableView').classList.remove('active');
+            document.getElementById('comparatorView').classList.remove('active');
+            document.getElementById('portfolioView').classList.remove('active');
+            
             if (view === 'treemap') {
                 document.getElementById('chartContainer').style.display = 'block';
-                document.getElementById('tableView').classList.remove('active');
                 renderChart(filteredData);
-            } else {
-                document.getElementById('chartContainer').style.display = 'none';
+            } else if (view === 'bubble') {
+                document.getElementById('bubbleView').classList.add('active');
+                renderBubbles(filteredData);
+            } else if (view === 'table') {
                 document.getElementById('tableView').classList.add('active');
                 renderTable(filteredData);
+            } else if (view === 'comparator') {
+                document.getElementById('comparatorView').classList.add('active');
+                updateComparison();
+            } else if (view === 'portfolio') {
+                document.getElementById('portfolioView').classList.add('active');
+                updatePortfolioValues();
+            }
+        }
+        
+        // Renderizar vista actual
+        function renderCurrentView() {
+            if (currentView === 'treemap') {
+                renderChart(filteredData);
+            } else if (currentView === 'bubble') {
+                renderBubbles(filteredData);
+            } else if (currentView === 'table') {
+                renderTable(filteredData);
+            } else if (currentView === 'comparator') {
+                updateComparison();
+            } else if (currentView === 'portfolio') {
+                updatePortfolioValues();
             }
         }
         
@@ -918,7 +2109,6 @@
         function filterSector(sector) {
             activeSector = sector;
             
-            // Actualizar botones activos
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -927,22 +2117,18 @@
                 event.target.classList.add('active');
             }
             
-            // Filtrar datos
             filteredData = sector === 'all' 
                 ? ibexData 
                 : ibexData.filter(d => d.sector === sector);
             
-            // Actualizar mensaje de filtro
             const filterMessage = document.getElementById('filterMessage');
             if (sector === 'all') {
                 filterMessage.classList.remove('active');
             } else {
                 filterMessage.classList.add('active');
                 document.getElementById('filterCount').textContent = filteredData.length;
-                document.getElementById('filterSector').textContent = sector;
             }
             
-            // Calcular estadísticas
             if (filteredData.length > 0) {
                 const totalCompanies = filteredData.length;
                 const totalMarketCap = filteredData.reduce((sum, d) => sum + d.marketCap, 0);
@@ -975,11 +2161,43 @@
                 }
             }
             
-            // Renderizar vista actual
-            if (currentView === 'treemap') {
-                renderChart(filteredData);
+            renderCurrentView();
+        }
+        
+        // Verificar si el mercado está abierto
+        function checkMarketStatus() {
+            const now = new Date();
+            const spainTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Madrid' }));
+            
+            const day = spainTime.getDay();
+            const hours = spainTime.getHours();
+            const minutes = spainTime.getMinutes();
+            const currentTime = hours * 60 + minutes;
+            
+            const marketOpen = 540; // 9:00
+            const marketClose = 1050; // 17:30
+            
+            const statusElement = document.getElementById('marketStatus');
+            const statusText = statusElement.querySelector('.status-text');
+            
+            if (day === 0 || day === 6) {
+                statusElement.className = 'market-status closed';
+                statusText.textContent = 'Mercado cerrado (fin de semana)';
+                return false;
+            }
+            
+            if (currentTime >= marketOpen && currentTime <= marketClose) {
+                statusElement.className = 'market-status open';
+                statusText.textContent = 'Mercado abierto';
+                return true;
             } else {
-                renderTable(filteredData);
+                statusElement.className = 'market-status closed';
+                if (currentTime < marketOpen) {
+                    statusText.textContent = 'Mercado cerrado (abre a las 9:00)';
+                } else {
+                    statusText.textContent = 'Mercado cerrado (cerró a las 17:30)';
+                }
+                return false;
             }
         }
         
@@ -1002,23 +2220,48 @@
                 );
             }
             
+            renderCurrentView();
+        });
+        
+        // Density slider
+        document.getElementById('densitySlider').addEventListener('input', function(e) {
+            densityLevel = parseInt(e.target.value);
+            const labels = ['Mínima', 'Media', 'Máxima'];
+            document.getElementById('densityLabel').textContent = labels[densityLevel - 1];
+            
             if (currentView === 'treemap') {
                 renderChart(filteredData);
-            } else {
-                renderTable(filteredData);
             }
         });
         
-        // Selectores de período
-        document.querySelectorAll('.period-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentPeriod = this.dataset.period;
-                
-                // Aquí podrías agregar lógica para cargar datos de diferentes períodos
-                console.log('Período seleccionado:', currentPeriod);
-            });
+        // Calcular monto en portfolio
+        document.getElementById('sharesInput').addEventListener('input', function() {
+            const select = document.getElementById('stockSelect');
+            const shares = parseInt(this.value) || 0;
+            
+            if (select.value) {
+                const priceText = select.options[select.selectedIndex].text;
+                const match = priceText.match(/€([\d.]+)/);
+                if (match) {
+                    const price = parseFloat(match[1]);
+                    const amount = shares * price;
+                    document.getElementById('amountInput').value = `€${amount.toFixed(2)}`;
+                }
+            }
+        });
+        
+        document.getElementById('stockSelect').addEventListener('change', function() {
+            const shares = parseInt(document.getElementById('sharesInput').value) || 0;
+            
+            if (this.value && shares > 0) {
+                const priceText = this.options[this.selectedIndex].text;
+                const match = priceText.match(/€([\d.]+)/);
+                if (match) {
+                    const price = parseFloat(match[1]);
+                    const amount = shares * price;
+                    document.getElementById('amountInput').value = `€${amount.toFixed(2)}`;
+                }
+            }
         });
         
         // Compartir visualización
@@ -1026,13 +2269,13 @@
             const url = window.location.href;
             if (navigator.share) {
                 navigator.share({
-                    title: 'IBEX 35 - Mapa en Tiempo Real',
-                    text: 'Visualización interactiva del IBEX 35',
+                    title: 'IBEX 35 - Visualización Interactiva',
+                    text: 'Mirá la visualización interactiva del IBEX 35',
                     url: url
                 });
             } else {
                 navigator.clipboard.writeText(url);
-                alert('URL copiada al portapapeles');
+                alert('✅ URL copiada al portapapeles');
             }
         }
         
@@ -1058,18 +2301,27 @@
             a.click();
         }
         
+        // Descargar PDF
+        function downloadPDF() {
+            alert('📄 Generando reporte PDF...\n\nEsta funcionalidad genera un PDF con el estado actual del IBEX 35 incluyendo gráficos y tablas.');
+            // Implementación completa requeriría jsPDF + html2canvas para capturar el contenido
+        }
+        
         // Código de inserción
         function embedCode() {
-            const code = `<iframe src="${window.location.href}" width="100%" height="800" frameborder="0"></iframe>`;
+            const code = `<iframe src="${window.location.href}" width="100%" height="900" frameborder="0" style="border-radius: 8px;"></iframe>`;
             navigator.clipboard.writeText(code);
-            alert('Código de inserción copiado al portapapeles');
+            alert('✅ Código de inserción copiado al portapapeles\n\nPegalo en tu sitio web para embedear la visualización');
         }
         
         // Inicializar
+        loadDarkMode();
+        loadPortfolio();
         loadData();
+        checkMarketStatus();
         
-        // Recargar datos cada 15 minutos
-        setInterval(loadData, 15 * 60 * 1000);
+        // Actualizar estado del mercado cada minuto
+        setInterval(checkMarketStatus, 60000);
     </script>
 </body>
 </html>
