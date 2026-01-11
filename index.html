@@ -857,6 +857,20 @@
             color: #e5e7eb;
         }
         
+        #initialInvestment {
+            color: var(--heading-color);
+        }
+        
+        .dark-mode #initialInvestment {
+            color: #e5e7eb;
+            background: transparent;
+        }
+        
+        #initialInvestment:focus {
+            outline: none;
+            border-bottom-color: var(--secondary-blue);
+        }
+        
         .summary-change {
             font-size: 14px;
             margin-top: 5px;
@@ -1216,7 +1230,13 @@
                 <span id="darkModeIcon">🌙</span> Modo Oscuro
             </button>
             <h1>IBEX 35 - Visualización Interactiva</h1>
-            <p class="header-subtitle">Datos en tiempo real del índice bursátil español</p>
+            <p class="header-subtitle">
+                Explorá el mercado español en tiempo real con múltiples herramientas: 
+                <strong>📊 Mapas interactivos</strong> • <strong>⚪ Vista de burbujas</strong> • 
+                <strong>📋 Tablas ordenables</strong> • <strong>⚖️ Comparador de empresas</strong> • 
+                <strong>💰 Simulador de inversiones</strong> • <strong>🌙 Modo oscuro</strong> • 
+                <strong>🔍 Búsqueda y filtros</strong> • <strong>📊 Rankings en vivo</strong>
+            </p>
             <div class="header-info">
                 <div>
                     <span class="index-value">--</span>
@@ -1289,7 +1309,7 @@
                         <button class="view-btn" onclick="switchView('bubble')">⚪ Burbujas</button>
                         <button class="view-btn" onclick="switchView('table')">📋 Tabla</button>
                         <button class="view-btn" onclick="switchView('comparator')">⚖️ Comparar</button>
-                        <button class="view-btn" onclick="switchView('portfolio')">💰 Portfolio</button>
+                        <button class="view-btn" onclick="switchView('portfolio')">💰 Simulador</button>
                     </div>
                 </div>
                 
@@ -1393,10 +1413,23 @@
         
         <!-- Portfolio View -->
         <div class="portfolio-view" id="portfolioView">
+            <div style="padding: 30px 30px 0 30px; background: var(--primary-color);">
+                <h2 style="color: white; font-size: 24px; margin: 0;">💰 Simulador de Inversiones</h2>
+                <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-top: 10px;">
+                    Practicá estrategias de inversión sin riesgo. Los datos se actualizan con precios reales del mercado.
+                </p>
+            </div>
             <div class="portfolio-summary">
                 <div class="summary-card">
                     <div class="summary-label">Inversión Inicial</div>
-                    <div class="summary-value">€<span id="portfolioInitial">10.000</span></div>
+                    <div class="summary-value" style="display: flex; align-items: center; gap: 10px;">
+                        <span>€</span>
+                        <input type="number" id="initialInvestment" value="10000" 
+                               style="width: 120px; font-size: 28px; font-weight: bold; border: none; 
+                                      border-bottom: 2px solid var(--primary-color); padding: 5px; 
+                                      text-align: right; background: transparent; font-family: inherit;"
+                               onchange="updateInitialInvestment()">
+                    </div>
                 </div>
                 <div class="summary-card">
                     <div class="summary-label">Valor Actual</div>
@@ -1442,10 +1475,10 @@
                             <label>Monto a invertir</label>
                             <input type="text" id="amountInput" readonly style="background: #f9fafb;">
                         </div>
-                        <button class="add-btn" onclick="addToPortfolio()">💰 Agregar a Portfolio</button>
+                        <button class="add-btn" onclick="addToPortfolio()">💰 Agregar a Simulador</button>
                     </div>
                     <button class="action-btn" onclick="resetPortfolio()" style="width: 100%; justify-content: center;">
-                        🔄 Resetear Portfolio
+                        🔄 Resetear Simulador
                     </button>
                 </div>
             </div>
@@ -1522,6 +1555,29 @@
         let densityLevel = 2;
         let portfolio = [];
         let comparedCompanies = [null, null, null, null];
+        let initialInvestment = 10000;
+        
+        // Cargar inversión inicial desde localStorage
+        function loadInitialInvestment() {
+            const saved = localStorage.getItem('initial_investment');
+            if (saved) {
+                initialInvestment = parseFloat(saved);
+                document.getElementById('initialInvestment').value = initialInvestment;
+            }
+        }
+        
+        // Actualizar inversión inicial
+        function updateInitialInvestment() {
+            const value = parseFloat(document.getElementById('initialInvestment').value);
+            if (value && value > 0) {
+                initialInvestment = value;
+                localStorage.setItem('initial_investment', initialInvestment);
+                updatePortfolioValues();
+            } else {
+                alert('Por favor ingresá un monto válido');
+                document.getElementById('initialInvestment').value = initialInvestment;
+            }
+        }
         
         // Cargar portfolio desde localStorage
         function loadPortfolio() {
@@ -1913,7 +1969,7 @@
                 document.getElementById('holdingsContainer').innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
-                        <div>Todavía no tenés inversiones en tu portfolio</div>
+                        <div>Todavía no tenés inversiones en tu simulador</div>
                         <div style="font-size: 13px; margin-top: 10px; color: #999;">Agregá empresas del IBEX 35 usando el formulario de la derecha</div>
                     </div>
                 `;
@@ -1977,11 +2033,10 @@
             document.getElementById('holdingsContainer').innerHTML = tableHTML;
             
             // Actualizar resumen
-            const totalGain = totalCurrent - totalInvested;
-            const totalGainPercent = (totalGain / totalInvested) * 100;
-            const todayGainPercent = (todayGain / totalCurrent) * 100;
+            const totalGain = totalCurrent - initialInvestment;
+            const totalGainPercent = totalInvested > 0 ? (totalGain / initialInvestment) * 100 : 0;
+            const todayGainPercent = totalCurrent > 0 ? (todayGain / totalCurrent) * 100 : 0;
             
-            document.getElementById('portfolioInitial').textContent = totalInvested.toLocaleString('es-ES');
             document.getElementById('portfolioCurrent').textContent = totalCurrent.toLocaleString('es-ES');
             document.getElementById('portfolioTotalChange').textContent = 
                 `${totalGain >= 0 ? '+' : ''}€${totalGain.toFixed(0)} (${totalGainPercent.toFixed(2)}%)`;
@@ -2018,6 +2073,18 @@
             const company = ibexData.find(c => c.ticker === select.value);
             if (!company) return;
             
+            // Calcular si hay suficiente presupuesto
+            const cost = shares * company.price;
+            const currentInvested = portfolio.reduce((sum, h) => {
+                const c = ibexData.find(x => x.ticker === h.ticker);
+                return sum + (h.shares * h.buyPrice);
+            }, 0);
+            
+            if (currentInvested + cost > initialInvestment) {
+                alert(`⚠️ No tenés suficiente presupuesto.\n\nInversión inicial: €${initialInvestment.toLocaleString('es-ES')}\nYa invertido: €${currentInvested.toLocaleString('es-ES')}\nDisponible: €${(initialInvestment - currentInvested).toLocaleString('es-ES')}\nNecesitás: €${cost.toLocaleString('es-ES')}`);
+                return;
+            }
+            
             portfolio.push({
                 ticker: company.ticker,
                 shares: shares,
@@ -2032,7 +2099,7 @@
             document.getElementById('sharesInput').value = '100';
             document.getElementById('amountInput').value = '';
             
-            alert(`✅ Agregaste ${shares} acciones de ${company.name} a tu portfolio`);
+            alert(`✅ Agregaste ${shares} acciones de ${company.name} a tu simulador`);
         }
         
         // Remover del portfolio
@@ -2049,11 +2116,11 @@
         
         // Resetear portfolio
         function resetPortfolio() {
-            if (confirm('¿Seguro que querés resetear todo tu portfolio? Esta acción no se puede deshacer.')) {
+            if (confirm('¿Seguro que querés resetear todo tu simulador? Esta acción no se puede deshacer.')) {
                 portfolio = [];
                 savePortfolio();
                 updatePortfolioValues();
-                alert('🔄 Portfolio reseteado');
+                alert('🔄 Simulador reseteado');
             }
         }
         
@@ -2316,6 +2383,7 @@
         
         // Inicializar
         loadDarkMode();
+        loadInitialInvestment();
         loadPortfolio();
         loadData();
         checkMarketStatus();
