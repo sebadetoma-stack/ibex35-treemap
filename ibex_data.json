@@ -1,0 +1,50 @@
+{
+  "lastUpdate": "2026-01-10T14:11:52.370106",
+  "index": {
+    "value": 11847.23,
+    "change": 78.91,
+    "changePercent": 0.67
+  },
+  "companies": [
+    {
+      "name": "Inditex",
+      "ticker": "ITX",
+      "price": 48.32,
+      "change": 2.45,
+      "marketCap": 150000,
+      "sector": "Consumo"
+    },
+    {
+      "name": "Banco Santander",
+      "ticker": "SAN",
+      "price": 4.68,
+      "change": 1.32,
+      "marketCap": 78000,
+      "sector": "Banca"
+    },
+    {
+      "name": "Iberdrola",
+      "ticker": "IBE",
+      "price": 12.89,
+      "change": 0.87,
+      "marketCap": 82000,
+      "sector": "Energía"
+    },
+    {
+      "name": "BBVA",
+      "ticker": "BBVA",
+      "price": 10.24,
+      "change": 1.56,
+      "marketCap": 65000,
+      "sector": "Banca"
+    },
+    {
+      "name": "Telefónica",
+      "ticker": "TEF",
+      "price": 4.12,
+      "change": -0.73,
+      "marketCap": 23000,
+      "sector": "Telecom"
+    }
+  ]
+}

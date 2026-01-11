@@ -1,0 +1,14 @@
+[build]
+  command = "python update_ibex_data.py && mv ibex35_treemap.html index.html"
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
+  for = "/ibex_data.json"
+  [headers.values]
+    Cache-Control = "public, max-age=60"
