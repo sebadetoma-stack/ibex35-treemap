@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IBEX 35 - Mapa en Tiempo Real</title>
+    <title>IBEX 35 - Mapa en Tiempo Real | El Cronista</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
+        :root {
+            --primary-color: #007C74;
+            --secondary-red: #E74C3C;
+            --secondary-light: #F9F7F2;
+            --secondary-blue: #00AEEF;
+            --heading-color: #000000;
+            --body-color: #272525;
+            --positive-color: #007C74;
+            --negative-color: #E74C3C;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -14,8 +25,9 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f5f5;
+            background-color: var(--secondary-light);
             padding: 20px;
+            color: var(--body-color);
         }
         
         .container {
@@ -28,7 +40,7 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #005a54 100%);
             color: white;
             padding: 30px;
         }
@@ -37,6 +49,13 @@
             font-size: 32px;
             margin-bottom: 10px;
             font-weight: 600;
+            color: white;
+        }
+        
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
         }
         
         .sector-stats {
@@ -101,11 +120,11 @@
         }
         
         .positive {
-            color: #10b981;
+            color: var(--positive-color);
         }
         
         .negative {
-            color: #ef4444;
+            color: var(--negative-color);
         }
         
         .last-update {
@@ -113,22 +132,178 @@
             opacity: 0.9;
         }
         
+        /* Loading spinner */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            gap: 20px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--secondary-light);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Instrucciones */
+        .instructions {
+            padding: 20px 30px;
+            background: #e8f5f4;
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--body-color);
+        }
+        
+        .instructions-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .instructions-icon {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+        
+        .instructions-text {
+            font-size: 14px;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        /* Controles principales */
+        .controls {
+            padding: 20px 30px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .controls-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .control-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .control-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--heading-color);
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            background: var(--secondary-light);
+            padding: 4px;
+            border-radius: 6px;
+        }
+        
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--body-color);
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        .view-btn.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .period-selector {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .period-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--primary-color);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary-color);
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        .period-btn:hover {
+            background: #e8f5f4;
+        }
+        
+        .period-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Filtros de sector */
         .filters {
             padding: 20px 30px;
-            background: #f9fafb;
+            background: var(--secondary-light);
             border-bottom: 1px solid #e5e7eb;
         }
         
         .filters h3 {
-            font-size: 14px;
-            color: #374151;
+            font-size: 12px;
+            color: var(--heading-color);
             margin-bottom: 12px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .filter-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         
@@ -140,48 +315,117 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
-            color: #374151;
+            color: var(--body-color);
             transition: all 0.2s ease;
+            font-family: inherit;
         }
         
         .filter-btn:hover {
-            border-color: #2a5298;
-            background: #f0f4ff;
+            border-color: var(--primary-color);
+            background: #e8f5f4;
         }
         
         .filter-btn.active {
-            background: #2a5298;
+            background: var(--primary-color);
             color: white;
-            border-color: #2a5298;
+            border-color: var(--primary-color);
         }
         
         .filter-btn.reset {
-            background: #ef4444;
+            background: var(--secondary-red);
             color: white;
-            border-color: #ef4444;
+            border-color: var(--secondary-red);
         }
         
         .filter-btn.reset:hover {
-            background: #dc2626;
-            border-color: #dc2626;
+            background: #c0392b;
+            border-color: #c0392b;
         }
         
+        /* Mensaje de filtro activo */
+        .filter-message {
+            padding: 12px 30px;
+            background: #e8f5f4;
+            border-bottom: 1px solid var(--primary-color);
+            font-size: 14px;
+            color: var(--heading-color);
+            font-weight: 500;
+            display: none;
+        }
+        
+        .filter-message.active {
+            display: block;
+        }
+        
+        /* Contenedor del gráfico */
         .chart-container {
             padding: 20px;
             min-height: 600px;
+            position: relative;
         }
         
+        /* Vista de tabla */
+        .table-view {
+            display: none;
+            padding: 20px;
+        }
+        
+        .table-view.active {
+            display: block;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        .data-table thead {
+            background: var(--secondary-light);
+        }
+        
+        .data-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--heading-color);
+            border-bottom: 2px solid var(--primary-color);
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .data-table th:hover {
+            background: #e8f5f4;
+        }
+        
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .data-table tr:hover {
+            background: var(--secondary-light);
+        }
+        
+        .sort-indicator {
+            margin-left: 5px;
+            font-size: 10px;
+        }
+        
+        /* Leyenda */
         .legend {
             padding: 20px 30px;
-            background: #f9fafb;
+            background: var(--secondary-light);
             border-top: 1px solid #e5e7eb;
         }
         
         .legend h3 {
-            font-size: 14px;
-            color: #6b7280;
+            font-size: 12px;
+            color: var(--heading-color);
             margin-bottom: 10px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .legend-items {
@@ -203,89 +447,68 @@
             border-radius: 3px;
         }
         
-        .footer {
-            padding: 15px 30px;
-            background: #f9fafb;
-            border-top: 1px solid #e5e7eb;
-            font-size: 12px;
-            color: #6b7280;
-            text-align: center;
-        }
-        
-        .filters {
+        /* Botones de acción */
+        .action-buttons {
             padding: 20px 30px;
             background: white;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .filters h3 {
-            font-size: 14px;
-            color: #374151;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-        
-        .filter-buttons {
+            border-top: 1px solid #e5e7eb;
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         
-        .filter-btn {
-            padding: 8px 16px;
-            border: 2px solid #e5e7eb;
+        .action-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--primary-color);
             background: white;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
-            color: #4b5563;
-            transition: all 0.2s ease;
+            color: var(--primary-color);
+            transition: all 0.2s;
             font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .filter-btn:hover {
-            border-color: #2a5298;
-            background: #f0f4ff;
-        }
-        
-        .filter-btn.active {
-            background: #2a5298;
+        .action-btn:hover {
+            background: var(--primary-color);
             color: white;
-            border-color: #2a5298;
         }
         
-        .filter-btn .count {
-            opacity: 0.7;
+        /* Footer */
+        .footer {
+            padding: 15px 30px;
+            background: var(--primary-color);
+            color: white;
             font-size: 12px;
-            margin-left: 4px;
+            text-align: center;
         }
         
-        .stats {
-            display: flex;
-            gap: 30px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e5e7eb;
-            flex-wrap: wrap;
+        .footer a {
+            color: white;
+            text-decoration: underline;
         }
         
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: #6b7280;
-            font-weight: 500;
-        }
-        
-        .stat-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #111827;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .controls-row {
+                flex-direction: column;
+            }
+            
+            .control-group {
+                width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -293,13 +516,14 @@
     <div class="container">
         <div class="header">
             <h1>IBEX 35 - Mapa en Tiempo Real</h1>
+            <p class="header-subtitle">Visualización interactiva de las 35 empresas del índice bursátil español</p>
             <div class="header-info">
                 <div>
                     <span class="index-value">11.847,23</span>
                     <span class="index-change positive">▲ 0,67% (+78,91)</span>
                 </div>
                 <div class="last-update">
-                    Última actualización: <span id="timestamp">05/01/2026 15:45:23</span>
+                    Última actualización: <span id="timestamp">--/--/---- --:--:--</span>
                 </div>
             </div>
             
@@ -330,18 +554,43 @@
             </div>
         </div>
         
-        <div class="filters">
-            <h3>Filtrar por sector</h3>
-            <div class="filter-buttons" id="filterButtons">
-                <!-- Los botones se generarán dinámicamente -->
+        <div class="instructions">
+            <div class="instructions-content">
+                <span class="instructions-icon">💡</span>
+                <span class="instructions-text">
+                    <strong>Cómo usar:</strong> Haga clic en las empresas para ver detalles. Use los filtros para analizar sectores específicos. El tamaño representa la capitalización bursátil y el color la variación diaria.
+                </span>
             </div>
-            <div class="stats" id="stats">
-                <!-- Las estadísticas se generarán dinámicamente -->
+        </div>
+        
+        <div class="controls">
+            <div class="controls-row">
+                <div class="control-group">
+                    <label class="control-label">Buscar empresa</label>
+                    <input type="text" id="searchBox" class="search-box" placeholder="Ej: Santander, Telefónica, Inditex...">
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Vista</label>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="switchView('treemap')">📊 Mapa</button>
+                        <button class="view-btn" onclick="switchView('table')">📋 Tabla</button>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Período</label>
+                    <div class="period-selector">
+                        <button class="period-btn active" data-period="day">Diario</button>
+                        <button class="period-btn" data-period="week">Semanal</button>
+                        <button class="period-btn" data-period="month">Mensual</button>
+                    </div>
+                </div>
             </div>
         </div>
         
         <div class="filters">
-            <h3>FILTRAR POR SECTOR</h3>
+            <h3>Filtrar por sector</h3>
             <div class="filter-buttons">
                 <button class="filter-btn reset" onclick="filterSector('all')">Mostrar Todos</button>
                 <button class="filter-btn" onclick="filterSector('Banca')">Banca</button>
@@ -357,23 +606,48 @@
             </div>
         </div>
         
-        <div class="chart-container">
+        <div class="filter-message" id="filterMessage">
+            Mostrando <span id="filterCount">35</span> empresas del sector <span id="filterSector">todos</span>
+        </div>
+        
+        <div class="chart-container" id="chartContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>Cargando datos del IBEX 35...</div>
+            </div>
             <div id="treemap"></div>
         </div>
         
+        <div class="table-view" id="tableView">
+            <table class="data-table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('name')">Empresa <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable('ticker')">Ticker <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable('sector')">Sector <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable('price')">Precio <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable('change')">Variación <span class="sort-indicator"></span></th>
+                        <th onclick="sortTable('marketCap')">Cap. Mercado <span class="sort-indicator"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+        
         <div class="legend">
-            <h3>VARIACIÓN DIARIA</h3>
+            <h3>Escala de variación diaria</h3>
             <div class="legend-items">
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #059669;"></div>
+                    <div class="legend-color" style="background: #005a54;"></div>
                     <span>> +2%</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #10b981;"></div>
+                    <div class="legend-color" style="background: #007C74;"></div>
                     <span>+1% a +2%</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #6ee7b7;"></div>
+                    <div class="legend-color" style="background: #4db8b2;"></div>
                     <span>0% a +1%</span>
                 </div>
                 <div class="legend-item">
@@ -381,29 +655,48 @@
                     <span>Sin cambios</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #fca5a5;"></div>
+                    <div class="legend-color" style="background: #f5b7ae;"></div>
                     <span>0% a -1%</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #ef4444;"></div>
+                    <div class="legend-color" style="background: #E74C3C;"></div>
                     <span>-1% a -2%</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-color" style="background: #dc2626;"></div>
+                    <div class="legend-color" style="background: #c0392b;"></div>
                     <span>< -2%</span>
                 </div>
             </div>
         </div>
         
+        <div class="action-buttons">
+            <button class="action-btn" onclick="shareVisualization()">
+                🔗 Compartir
+            </button>
+            <button class="action-btn" onclick="exportData()">
+                📥 Exportar datos
+            </button>
+            <button class="action-btn" onclick="embedCode()">
+                &lt;/&gt; Código de inserción
+            </button>
+        </div>
+        
         <div class="footer">
-            Datos en tiempo real vía Yahoo Finance • Actualización automática cada 15 minutos
+            Datos en tiempo real vía Yahoo Finance • Actualización automática cada 15 minutos • 
+            <a href="https://www.cronista.com" target="_blank">El Cronista</a>
         </div>
     </div>
 
     <script>
-        // Variable global para almacenar los datos
+        // Variables globales
         let ibexData = [];
         let indexData = {};
+        let filteredData = [];
+        let activeSector = 'all';
+        let currentView = 'treemap';
+        let currentPeriod = 'day';
+        let sortColumn = 'name';
+        let sortDirection = 'asc';
         
         // Cargar datos desde el JSON
         async function loadData() {
@@ -412,9 +705,13 @@
                 const data = await response.json();
                 
                 ibexData = data.companies;
+                filteredData = ibexData;
                 indexData = data.index;
                 
-                // Actualizar header con datos del índice
+                // Ocultar loading
+                document.querySelector('.loading').style.display = 'none';
+                
+                // Actualizar header
                 updateIndexHeader(indexData);
                 
                 // Actualizar timestamp
@@ -428,19 +725,23 @@
                     second: '2-digit'
                 });
                 
-                // Renderizar el gráfico inicial
-                renderChart(ibexData);
+                // Renderizar visualización inicial
+                if (currentView === 'treemap') {
+                    renderChart(filteredData);
+                } else {
+                    renderTable(filteredData);
+                }
                 
             } catch (error) {
                 console.error('Error cargando datos:', error);
-                document.getElementById('treemap').innerHTML = 
-                    '<div style="padding: 40px; text-align: center; color: #ef4444;">' +
+                document.querySelector('.loading').innerHTML = 
+                    '<div style="color: var(--negative-color);">' +
                     '❌ Error cargando datos del IBEX 35. Por favor, recarga la página.' +
                     '</div>';
             }
         }
         
-        // Actualizar información del índice en el header
+        // Actualizar header con datos del índice
         function updateIndexHeader(index) {
             const valueElement = document.querySelector('.index-value');
             const changeElement = document.querySelector('.index-change');
@@ -459,19 +760,19 @@
                 changeElement.textContent = `${arrow} ${sign}${index.changePercent.toFixed(2)}% (${sign}${index.change.toFixed(2)})`;
             }
         }
-
-        // Función para obtener color según variación
+        
+        // Función para obtener color según variación (paleta El Cronista)
         function getColor(change) {
-            if (change > 2) return '#059669';
-            if (change > 1) return '#10b981';
-            if (change > 0) return '#6ee7b7';
+            if (change > 2) return '#005a54';
+            if (change > 1) return '#007C74';
+            if (change > 0) return '#4db8b2';
             if (change === 0) return '#e5e7eb';
-            if (change > -1) return '#fca5a5';
-            if (change > -2) return '#ef4444';
-            return '#dc2626';
+            if (change > -1) return '#f5b7ae';
+            if (change > -2) return '#E74C3C';
+            return '#c0392b';
         }
-
-        // Función para renderizar el gráfico
+        
+        // Renderizar treemap
         function renderChart(data) {
             const labels = data.map(d => d.name);
             const parents = data.map(() => '');
@@ -536,11 +837,84 @@
 
             Plotly.newPlot('treemap', chartData, layout, config);
         }
-
-        // Variable para almacenar el sector activo
-        let activeSector = 'all';
-
-        // Función para filtrar por sector
+        
+        // Renderizar tabla
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            // Ordenar datos
+            const sortedData = [...data].sort((a, b) => {
+                let aVal = a[sortColumn];
+                let bVal = b[sortColumn];
+                
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                if (sortDirection === 'asc') {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+            
+            sortedData.forEach(company => {
+                const row = document.createElement('tr');
+                const changeClass = company.change >= 0 ? 'positive' : 'negative';
+                const changeSign = company.change >= 0 ? '+' : '';
+                
+                row.innerHTML = `
+                    <td><strong>${company.name}</strong></td>
+                    <td>${company.ticker}</td>
+                    <td>${company.sector}</td>
+                    <td>€${company.price.toFixed(2)}</td>
+                    <td class="${changeClass}">${changeSign}${company.change.toFixed(2)}%</td>
+                    <td>€${company.marketCap.toLocaleString('es-ES')}M</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Ordenar tabla
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            
+            // Actualizar indicadores visuales
+            document.querySelectorAll('.sort-indicator').forEach(el => el.textContent = '');
+            const th = event.target.closest('th');
+            th.querySelector('.sort-indicator').textContent = sortDirection === 'asc' ? '▲' : '▼';
+            
+            renderTable(filteredData);
+        }
+        
+        // Cambiar vista
+        function switchView(view) {
+            currentView = view;
+            
+            // Actualizar botones
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Mostrar/ocultar vistas
+            if (view === 'treemap') {
+                document.getElementById('chartContainer').style.display = 'block';
+                document.getElementById('tableView').classList.remove('active');
+                renderChart(filteredData);
+            } else {
+                document.getElementById('chartContainer').style.display = 'none';
+                document.getElementById('tableView').classList.add('active');
+                renderTable(filteredData);
+            }
+        }
+        
+        // Filtrar por sector
         function filterSector(sector) {
             activeSector = sector;
             
@@ -554,68 +928,144 @@
             }
             
             // Filtrar datos
-            let filteredData = sector === 'all' 
+            filteredData = sector === 'all' 
                 ? ibexData 
                 : ibexData.filter(d => d.sector === sector);
             
-            // Calcular estadísticas
-            const totalCompanies = filteredData.length;
-            const totalMarketCap = filteredData.reduce((sum, d) => sum + d.marketCap, 0);
-            const avgChange = filteredData.reduce((sum, d) => sum + d.change, 0) / totalCompanies;
-            
-            // Encontrar mejor y peor
-            const sortedByChange = [...filteredData].sort((a, b) => b.change - a.change);
-            const best = sortedByChange[0];
-            const worst = sortedByChange[sortedByChange.length - 1];
-            
-            // Actualizar estadísticas en el DOM
-            const statsContainer = document.getElementById('sectorStats');
+            // Actualizar mensaje de filtro
+            const filterMessage = document.getElementById('filterMessage');
             if (sector === 'all') {
-                statsContainer.classList.remove('active');
+                filterMessage.classList.remove('active');
             } else {
-                statsContainer.classList.add('active');
-                document.getElementById('sectorTitle').textContent = `Sector: ${sector}`;
-                document.getElementById('statCompanies').textContent = totalCompanies;
-                document.getElementById('statMarketCap').textContent = `€${totalMarketCap.toLocaleString('es-ES')}M`;
-                
-                const avgChangeElement = document.getElementById('statAvgChange');
-                avgChangeElement.textContent = `${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%`;
-                avgChangeElement.className = `stat-value ${avgChange >= 0 ? 'positive' : 'negative'}`;
-                
-                const bestElement = document.getElementById('statBest');
-                bestElement.textContent = `${best.name} ${best.change >= 0 ? '+' : ''}${best.change.toFixed(2)}%`;
-                bestElement.className = `stat-value ${best.change >= 0 ? 'positive' : 'negative'}`;
-                
-                const worstElement = document.getElementById('statWorst');
-                worstElement.textContent = `${worst.name} ${worst.change >= 0 ? '+' : ''}${worst.change.toFixed(2)}%`;
-                worstElement.className = `stat-value ${worst.change >= 0 ? 'positive' : 'negative'}`;
+                filterMessage.classList.add('active');
+                document.getElementById('filterCount').textContent = filteredData.length;
+                document.getElementById('filterSector').textContent = sector;
             }
             
-            // Renderizar con datos filtrados
-            renderChart(filteredData);
+            // Calcular estadísticas
+            if (filteredData.length > 0) {
+                const totalCompanies = filteredData.length;
+                const totalMarketCap = filteredData.reduce((sum, d) => sum + d.marketCap, 0);
+                const avgChange = filteredData.reduce((sum, d) => sum + d.change, 0) / totalCompanies;
+                
+                const sortedByChange = [...filteredData].sort((a, b) => b.change - a.change);
+                const best = sortedByChange[0];
+                const worst = sortedByChange[sortedByChange.length - 1];
+                
+                const statsContainer = document.getElementById('sectorStats');
+                if (sector === 'all') {
+                    statsContainer.classList.remove('active');
+                } else {
+                    statsContainer.classList.add('active');
+                    document.getElementById('sectorTitle').textContent = `Sector: ${sector}`;
+                    document.getElementById('statCompanies').textContent = totalCompanies;
+                    document.getElementById('statMarketCap').textContent = `€${totalMarketCap.toLocaleString('es-ES')}M`;
+                    
+                    const avgChangeElement = document.getElementById('statAvgChange');
+                    avgChangeElement.textContent = `${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%`;
+                    avgChangeElement.className = `stat-value ${avgChange >= 0 ? 'positive' : 'negative'}`;
+                    
+                    const bestElement = document.getElementById('statBest');
+                    bestElement.textContent = `${best.name} ${best.change >= 0 ? '+' : ''}${best.change.toFixed(2)}%`;
+                    bestElement.className = `stat-value ${best.change >= 0 ? 'positive' : 'negative'}`;
+                    
+                    const worstElement = document.getElementById('statWorst');
+                    worstElement.textContent = `${worst.name} ${worst.change >= 0 ? '+' : ''}${worst.change.toFixed(2)}%`;
+                    worstElement.className = `stat-value ${worst.change >= 0 ? 'positive' : 'negative'}`;
+                }
+            }
+            
+            // Renderizar vista actual
+            if (currentView === 'treemap') {
+                renderChart(filteredData);
+            } else {
+                renderTable(filteredData);
+            }
         }
-
-        // Simular actualización del timestamp cada minuto
-        function updateTimestamp() {
-            const now = new Date();
-            const formatted = now.toLocaleString('es-ES', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+        
+        // Búsqueda de empresas
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredData = activeSector === 'all' 
+                    ? ibexData 
+                    : ibexData.filter(d => d.sector === activeSector);
+            } else {
+                const baseData = activeSector === 'all' 
+                    ? ibexData 
+                    : ibexData.filter(d => d.sector === activeSector);
+                    
+                filteredData = baseData.filter(d => 
+                    d.name.toLowerCase().includes(searchTerm) ||
+                    d.ticker.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (currentView === 'treemap') {
+                renderChart(filteredData);
+            } else {
+                renderTable(filteredData);
+            }
+        });
+        
+        // Selectores de período
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentPeriod = this.dataset.period;
+                
+                // Aquí podrías agregar lógica para cargar datos de diferentes períodos
+                console.log('Período seleccionado:', currentPeriod);
             });
-            document.getElementById('timestamp').textContent = formatted;
+        });
+        
+        // Compartir visualización
+        function shareVisualization() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'IBEX 35 - Mapa en Tiempo Real',
+                    text: 'Visualización interactiva del IBEX 35',
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url);
+                alert('URL copiada al portapapeles');
+            }
         }
-
-        // Actualizar timestamp inicial
-        updateTimestamp();
         
-        // Actualizar cada minuto para la demo
-        setInterval(updateTimestamp, 60000);
+        // Exportar datos
+        function exportData() {
+            const csv = [
+                ['Empresa', 'Ticker', 'Sector', 'Precio', 'Variación %', 'Cap. Mercado (M€)'],
+                ...filteredData.map(d => [
+                    d.name,
+                    d.ticker,
+                    d.sector,
+                    d.price,
+                    d.change,
+                    d.marketCap
+                ])
+            ].map(row => row.join(',')).join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ibex35_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
         
-        // Cargar datos al iniciar la página
+        // Código de inserción
+        function embedCode() {
+            const code = `<iframe src="${window.location.href}" width="100%" height="800" frameborder="0"></iframe>`;
+            navigator.clipboard.writeText(code);
+            alert('Código de inserción copiado al portapapeles');
+        }
+        
+        // Inicializar
         loadData();
         
         // Recargar datos cada 15 minutos
