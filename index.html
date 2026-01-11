@@ -1197,12 +1197,42 @@
         
         /* Responsive */
         @media (max-width: 968px) {
+            body {
+                padding: 10px;
+            }
+            
             .header h1 {
-                font-size: 24px;
+                font-size: 22px;
+                padding-right: 120px;
+            }
+            
+            .header-subtitle {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+            
+            .dark-mode-toggle {
+                padding: 6px 12px;
+                font-size: 12px;
+                top: 20px;
+                right: 20px;
             }
             
             .rankings {
                 grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .instructions {
+                padding: 15px 20px;
+            }
+            
+            .instructions-text {
+                font-size: 13px;
+            }
+            
+            .controls {
+                padding: 15px 20px;
             }
             
             .controls-row {
@@ -1213,12 +1243,156 @@
                 width: 100%;
             }
             
+            .view-toggle {
+                flex-wrap: wrap;
+            }
+            
+            .view-btn {
+                flex: 1;
+                min-width: 100px;
+                justify-content: center;
+            }
+            
+            .filters {
+                padding: 15px 20px;
+            }
+            
+            .filter-message {
+                padding: 10px 20px;
+            }
+            
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-value {
+                font-size: 18px;
+            }
+            
+            .chart-container {
+                padding: 10px;
+            }
+            
+            .bubble-view {
+                padding: 20px 10px;
+            }
+            
+            .table-view {
+                padding: 10px;
+                overflow-x: auto;
+            }
+            
+            .data-table {
+                font-size: 12px;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 8px 4px;
+            }
+            
+            .portfolio-summary {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 20px 15px;
+                gap: 15px;
+            }
+            
+            .summary-card {
+                padding: 15px;
+            }
+            
+            .summary-value {
+                font-size: 22px;
+            }
+            
+            #initialInvestment {
+                font-size: 22px;
+                width: 100px;
             }
             
             .portfolio-content {
                 grid-template-columns: 1fr;
+                padding: 20px 15px;
+            }
+            
+            .holdings-table {
+                font-size: 11px;
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .holdings-table th,
+            .holdings-table td {
+                padding: 8px 4px;
+                white-space: nowrap;
+            }
+            
+            .comparator-selector {
+                flex-direction: column;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .legend {
+                padding: 15px 20px;
+            }
+            
+            .legend-items {
+                gap: 10px;
+            }
+            
+            .action-buttons {
+                padding: 15px 20px;
+            }
+            
+            .action-btn {
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .index-value {
+                font-size: 20px;
+            }
+            
+            .index-change {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .ranking-title {
+                font-size: 14px;
+            }
+            
+            .ranking-company {
+                font-size: 12px;
+            }
+            
+            .ranking-change {
+                font-size: 14px;
+            }
+            
+            .portfolio-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .view-btn {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            
+            .filter-btn {
+                font-size: 12px;
+                padding: 6px 12px;
             }
         }
     </style>
@@ -1231,7 +1405,7 @@
             </button>
             <h1>IBEX 35 - Visualización Interactiva</h1>
             <p class="header-subtitle">
-                Explorá el mercado español en tiempo real con múltiples herramientas: 
+                Explora el mercado español en tiempo real con múltiples herramientas: 
                 <strong>📊 Mapas interactivos</strong> • <strong>⚪ Vista de burbujas</strong> • 
                 <strong>📋 Tablas ordenables</strong> • <strong>⚖️ Comparador de empresas</strong> • 
                 <strong>💰 Simulador de inversiones</strong> • <strong>🌙 Modo oscuro</strong> • 
@@ -1290,7 +1464,7 @@
             <div class="instructions-content">
                 <span class="instructions-icon">💡</span>
                 <span class="instructions-text">
-                    <strong>Cómo usar:</strong> Navegá entre distintas vistas para analizar el IBEX 35. El tamaño representa capitalización bursátil y el color la variación diaria. Podés buscar empresas, filtrar por sectores, comparar valores y simular tu propio portfolio.
+                    <strong>Cómo usar:</strong> Navega entre distintas vistas para analizar el IBEX 35. El tamaño representa capitalización bursátil y el color la variación diaria. Puedes buscar empresas, filtrar por sectores, comparar valores y simular tu propio portfolio.
                 </span>
             </div>
         </div>
@@ -1416,7 +1590,7 @@
             <div style="padding: 30px 30px 0 30px; background: var(--primary-color);">
                 <h2 style="color: white; font-size: 24px; margin: 0;">💰 Simulador de Inversiones</h2>
                 <p style="color: rgba(255,255,255,0.9); font-size: 14px; margin-top: 10px;">
-                    Practicá estrategias de inversión sin riesgo. Los datos se actualizan con precios reales del mercado.
+                    Practica estrategias de inversión sin riesgo. Los datos se actualizan con precios reales del mercado.
                 </p>
             </div>
             <div class="portfolio-summary">
@@ -1454,8 +1628,8 @@
                     <div id="holdingsContainer">
                         <div class="empty-state">
                             <div class="empty-state-icon">📊</div>
-                            <div>Todavía no tenés inversiones en tu portfolio</div>
-                            <div style="font-size: 13px; margin-top: 10px; color: #999;">Agregá empresas del IBEX 35 usando el formulario de la derecha</div>
+                            <div>Todavía no tienes inversiones en tu portfolio</div>
+                            <div style="font-size: 13px; margin-top: 10px; color: #999;">Añade empresas del IBEX 35 usando el formulario de la derecha</div>
                         </div>
                     </div>
                 </div>
@@ -1574,7 +1748,7 @@
                 localStorage.setItem('initial_investment', initialInvestment);
                 updatePortfolioValues();
             } else {
-                alert('Por favor ingresá un monto válido');
+                alert('Por favor ingresa un monto válido');
                 document.getElementById('initialInvestment').value = initialInvestment;
             }
         }
@@ -1969,8 +2143,8 @@
                 document.getElementById('holdingsContainer').innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
-                        <div>Todavía no tenés inversiones en tu simulador</div>
-                        <div style="font-size: 13px; margin-top: 10px; color: #999;">Agregá empresas del IBEX 35 usando el formulario de la derecha</div>
+                        <div>Todavía no tienes inversiones en tu simulador</div>
+                        <div style="font-size: 13px; margin-top: 10px; color: #999;">Añade empresas del IBEX 35 usando el formulario de la derecha</div>
                     </div>
                 `;
                 return;
@@ -2081,7 +2255,7 @@
             }, 0);
             
             if (currentInvested + cost > initialInvestment) {
-                alert(`⚠️ No tenés suficiente presupuesto.\n\nInversión inicial: €${initialInvestment.toLocaleString('es-ES')}\nYa invertido: €${currentInvested.toLocaleString('es-ES')}\nDisponible: €${(initialInvestment - currentInvested).toLocaleString('es-ES')}\nNecesitás: €${cost.toLocaleString('es-ES')}`);
+                alert(`⚠️ No tienes suficiente presupuesto.\n\nInversión inicial: €${initialInvestment.toLocaleString('es-ES')}\nYa invertido: €${currentInvested.toLocaleString('es-ES')}\nDisponible: €${(initialInvestment - currentInvested).toLocaleString('es-ES')}\nNecesitas: €${cost.toLocaleString('es-ES')}`);
                 return;
             }
             
@@ -2099,7 +2273,7 @@
             document.getElementById('sharesInput').value = '100';
             document.getElementById('amountInput').value = '';
             
-            alert(`✅ Agregaste ${shares} acciones de ${company.name} a tu simulador`);
+            alert(`✅ Has añadido ${shares} acciones de ${company.name} a tu simulador`);
         }
         
         // Remover del portfolio
@@ -2107,7 +2281,7 @@
             const holding = portfolio[index];
             const company = ibexData.find(c => c.ticker === holding.ticker);
             
-            if (confirm(`¿Seguro que querés vender todas las acciones de ${company.name}?`)) {
+            if (confirm(`¿Seguro que quieres vender todas las acciones de ${company.name}?`)) {
                 portfolio.splice(index, 1);
                 savePortfolio();
                 updatePortfolioValues();
@@ -2116,7 +2290,7 @@
         
         // Resetear portfolio
         function resetPortfolio() {
-            if (confirm('¿Seguro que querés resetear todo tu simulador? Esta acción no se puede deshacer.')) {
+            if (confirm('¿Seguro que quieres resetear todo tu simulador? Esta acción no se puede deshacer.')) {
                 portfolio = [];
                 savePortfolio();
                 updatePortfolioValues();
@@ -2337,7 +2511,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: 'IBEX 35 - Visualización Interactiva',
-                    text: 'Mirá la visualización interactiva del IBEX 35',
+                    text: 'Mira la visualización interactiva del IBEX 35',
                     url: url
                 });
             } else {
@@ -2378,7 +2552,7 @@
         function embedCode() {
             const code = `<iframe src="${window.location.href}" width="100%" height="900" frameborder="0" style="border-radius: 8px;"></iframe>`;
             navigator.clipboard.writeText(code);
-            alert('✅ Código de inserción copiado al portapapeles\n\nPegalo en tu sitio web para embedear la visualización');
+            alert('✅ Código de inserción copiado al portapapeles\n\nPégalo en tu sitio web para insertar la visualización');
         }
         
         // Inicializar
