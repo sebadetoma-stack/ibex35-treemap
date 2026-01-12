@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-01-11T21:37:33.501989",
+  "lastUpdate": "2026-01-12T07:49:35.386039",
   "index": {
     "value": 17649.0,
     "change": -5.7,
@@ -26,7 +26,7 @@
       "name": "Iberdrola",
       "ticker": "IBE",
       "sector": "Energía",
-      "price": 18.9,
+      "price": 18.65,
       "change": -0.21,
       "marketCap": 126275.0
     },
@@ -50,7 +50,7 @@
       "name": "Repsol",
       "ticker": "REP",
       "sector": "Energía",
-      "price": 16.5,
+      "price": 16.0,
       "change": 0.86,
       "marketCap": 18300.0
     },
