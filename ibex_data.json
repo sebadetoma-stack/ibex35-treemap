@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-01-12T17:00:44.945002",
+  "lastUpdate": "2026-01-13T07:45:50.251607",
   "index": {
     "value": 17673.8,
     "change": 24.8,
@@ -60,7 +60,7 @@
       "sector": "Banca",
       "price": 10.63,
       "change": 1.09,
-      "marketCap": 74488.0
+      "marketCap": 74478.0
     },
     {
       "name": "Amadeus",
@@ -114,7 +114,7 @@
       "name": "Cellnex",
       "ticker": "CLNX",
       "sector": "Telecom",
-      "price": 27.15,
+      "price": 26.78,
       "change": 0.93,
       "marketCap": 18373.0
     },
@@ -202,7 +202,7 @@
       "name": "Sacyr",
       "ticker": "SCYR",
       "sector": "Construcción",
-      "price": 4.03,
+      "price": 3.98,
       "change": -0.1,
       "marketCap": 3183.0
     },
