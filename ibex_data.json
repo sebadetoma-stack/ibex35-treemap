@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-01-13T17:03:38.681591",
+  "lastUpdate": "2026-01-14T07:47:31.852793",
   "index": {
     "value": 17687.1,
     "change": 13.3,
@@ -66,7 +66,7 @@
       "name": "Amadeus",
       "ticker": "AMS",
       "sector": "Tecnología",
-      "price": 63.2,
+      "price": 62.67,
       "change": -1.56,
       "marketCap": 27262.0
     },
@@ -76,7 +76,7 @@
       "sector": "Construcción",
       "price": 57.94,
       "change": 0.7,
-      "marketCap": 41463.0
+      "marketCap": 41496.0
     },
     {
       "name": "Naturgy",
