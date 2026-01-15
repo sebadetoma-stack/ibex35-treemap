@@ -1,282 +1,282 @@
 {
-  "lastUpdate": "2026-01-15T11:55:12.976734",
+  "lastUpdate": "2026-01-15T13:54:33.891325",
   "index": {
-    "value": 17685.4,
-    "change": -10.3,
-    "changePercent": -0.06
+    "value": 17659.6,
+    "change": -36.1,
+    "changePercent": -0.2
   },
   "companies": [
     {
       "name": "Inditex",
       "ticker": "ITX",
       "sector": "Consumo",
-      "price": 55.84,
-      "change": -0.75,
-      "marketCap": 174018.0
+      "price": 56.0,
+      "change": -0.46,
+      "marketCap": 174517.0
     },
     {
       "name": "Banco Santander",
       "ticker": "SAN",
       "sector": "Banca",
-      "price": 10.56,
-      "change": 0.71,
-      "marketCap": 155164.0
+      "price": 10.54,
+      "change": 0.44,
+      "marketCap": 154753.0
     },
     {
       "name": "Iberdrola",
       "ticker": "IBE",
       "sector": "Energía",
       "price": 18.35,
-      "change": -0.03,
-      "marketCap": 122634.0
+      "change": -0.05,
+      "marketCap": 122601.0
     },
     {
       "name": "BBVA",
       "ticker": "BBVA",
       "sector": "Banca",
-      "price": 21.05,
-      "change": 0.19,
-      "marketCap": 119301.0
+      "price": 20.97,
+      "change": -0.19,
+      "marketCap": 118847.0
     },
     {
       "name": "Telefónica",
       "ticker": "TEF",
       "sector": "Telecom",
       "price": 3.38,
-      "change": -0.94,
-      "marketCap": 19046.0
+      "change": -0.85,
+      "marketCap": 19063.0
     },
     {
       "name": "Repsol",
       "ticker": "REP",
       "sector": "Energía",
-      "price": 15.89,
-      "change": -5.16,
-      "marketCap": 17618.0
+      "price": 15.76,
+      "change": -5.91,
+      "marketCap": 17480.0
     },
     {
       "name": "CaixaBank",
       "ticker": "CABK",
       "sector": "Banca",
-      "price": 10.7,
-      "change": -0.93,
-      "marketCap": 75004.0
+      "price": 10.68,
+      "change": -1.2,
+      "marketCap": 74793.0
     },
     {
       "name": "Amadeus",
       "ticker": "AMS",
       "sector": "Tecnología",
-      "price": 61.46,
-      "change": -0.32,
-      "marketCap": 26511.0
+      "price": 61.52,
+      "change": -0.23,
+      "marketCap": 26537.0
     },
     {
       "name": "Ferrovial",
       "ticker": "FER",
       "sector": "Construcción",
-      "price": 57.72,
-      "change": -0.59,
-      "marketCap": 41338.0
+      "price": 57.62,
+      "change": -0.76,
+      "marketCap": 41267.0
     },
     {
       "name": "Naturgy",
       "ticker": "NTGY",
       "sector": "Energía",
-      "price": 25.98,
-      "change": 0.31,
-      "marketCap": 24954.0
+      "price": 26.0,
+      "change": 0.39,
+      "marketCap": 24973.0
     },
     {
       "name": "ACS",
       "ticker": "ACS",
       "sector": "Construcción",
-      "price": 95.1,
-      "change": 1.06,
-      "marketCap": 24701.0
+      "price": 94.4,
+      "change": 0.32,
+      "marketCap": 24520.0
     },
     {
       "name": "Endesa",
       "ticker": "ELE",
       "sector": "Energía",
-      "price": 30.75,
-      "change": 0.75,
-      "marketCap": 31921.0
+      "price": 30.78,
+      "change": 0.85,
+      "marketCap": 31952.0
     },
     {
       "name": "Sabadell",
       "ticker": "SAB",
       "sector": "Banca",
-      "price": 3.27,
-      "change": 0.37,
-      "marketCap": 16317.0
+      "price": 3.26,
+      "change": 0.06,
+      "marketCap": 16267.0
     },
     {
       "name": "Cellnex",
       "ticker": "CLNX",
       "sector": "Telecom",
-      "price": 26.07,
-      "change": -0.11,
-      "marketCap": 17642.0
+      "price": 26.1,
+      "change": 0.0,
+      "marketCap": 17662.0
     },
     {
       "name": "IAG",
       "ticker": "IAG",
       "sector": "Transporte",
-      "price": 4.71,
-      "change": 0.73,
-      "marketCap": 21488.0
+      "price": 4.69,
+      "change": 0.41,
+      "marketCap": 21419.0
     },
     {
       "name": "Grifols",
       "ticker": "GRF",
       "sector": "Farmacia",
-      "price": 11.34,
-      "change": -2.87,
-      "marketCap": 7717.0
+      "price": 11.27,
+      "change": -3.47,
+      "marketCap": 7669.0
     },
     {
       "name": "Acciona",
       "ticker": "ANA",
       "sector": "Energía",
-      "price": 189.0,
-      "change": 0.43,
-      "marketCap": 10301.0
+      "price": 188.3,
+      "change": 0.05,
+      "marketCap": 10263.0
     },
     {
       "name": "Bankinter",
       "ticker": "BKT",
       "sector": "Banca",
-      "price": 14.28,
-      "change": -0.14,
-      "marketCap": 12838.0
+      "price": 14.24,
+      "change": -0.45,
+      "marketCap": 12797.0
     },
     {
       "name": "Aena",
       "ticker": "AENA",
       "sector": "Transporte",
-      "price": 25.0,
-      "change": 1.54,
-      "marketCap": 37500.0
+      "price": 25.08,
+      "change": 1.87,
+      "marketCap": 37620.0
     },
     {
       "name": "Mapfre",
       "ticker": "MAP",
       "sector": "Seguros",
-      "price": 4.25,
-      "change": 0.38,
-      "marketCap": 13005.0
+      "price": 4.23,
+      "change": 0.05,
+      "marketCap": 12962.0
     },
     {
       "name": "Acerinox",
       "ticker": "ACX",
       "sector": "Industrial",
-      "price": 13.22,
-      "change": 0.0,
-      "marketCap": 3295.0
+      "price": 13.28,
+      "change": 0.45,
+      "marketCap": 3310.0
     },
     {
       "name": "Enagás",
       "ticker": "ENG",
       "sector": "Energía",
-      "price": 13.92,
-      "change": 0.14,
-      "marketCap": 3618.0
+      "price": 13.95,
+      "change": 0.36,
+      "marketCap": 3626.0
     },
     {
       "name": "Unicaja",
       "ticker": "UNI",
       "sector": "Banca",
-      "price": 2.84,
-      "change": 0.57,
-      "marketCap": 7294.0
+      "price": 2.82,
+      "change": -0.07,
+      "marketCap": 7248.0
     },
     {
       "name": "Meliá Hotels",
       "ticker": "MEL",
       "sector": "Turismo",
-      "price": 7.77,
-      "change": -1.02,
-      "marketCap": 1711.0
+      "price": 7.82,
+      "change": -0.32,
+      "marketCap": 1723.0
     },
     {
       "name": "Sacyr",
       "ticker": "SCYR",
       "sector": "Construcción",
-      "price": 3.97,
-      "change": 0.51,
-      "marketCap": 3139.0
+      "price": 3.96,
+      "change": 0.2,
+      "marketCap": 3130.0
     },
     {
       "name": "Solaria",
       "ticker": "SLR",
       "sector": "Energía",
-      "price": 18.26,
-      "change": 0.41,
-      "marketCap": 2282.0
+      "price": 18.42,
+      "change": 1.29,
+      "marketCap": 2302.0
     },
     {
       "name": "Fluidra",
       "ticker": "FDR",
       "sector": "Industrial",
-      "price": 24.8,
-      "change": 0.24,
-      "marketCap": 4709.0
+      "price": 24.84,
+      "change": 0.4,
+      "marketCap": 4717.0
     },
     {
       "name": "Rovi",
       "ticker": "ROVI",
       "sector": "Farmacia",
-      "price": 69.65,
-      "change": -0.36,
-      "marketCap": 3563.0
+      "price": 70.2,
+      "change": 0.43,
+      "marketCap": 3591.0
     },
     {
       "name": "PharmaMar",
       "ticker": "PHM",
       "sector": "Farmacia",
-      "price": 81.6,
-      "change": -1.27,
-      "marketCap": 1397.0
+      "price": 81.5,
+      "change": -1.39,
+      "marketCap": 1395.0
     },
     {
       "name": "Indra",
       "ticker": "IDR",
       "sector": "Tecnología",
-      "price": 57.3,
-      "change": -0.26,
-      "marketCap": 10040.0
+      "price": 57.8,
+      "change": 0.61,
+      "marketCap": 10127.0
     },
     {
       "name": "ArcelorMittal",
       "ticker": "MTS",
       "sector": "Industrial",
-      "price": 41.69,
-      "change": -0.41,
-      "marketCap": 31728.0
+      "price": 41.82,
+      "change": -0.1,
+      "marketCap": 31827.0
     },
     {
       "name": "Merlin Properties",
       "ticker": "MRL",
       "sector": "Inmobiliario",
-      "price": 12.42,
-      "change": 0.08,
-      "marketCap": 6990.0
+      "price": 12.37,
+      "change": -0.32,
+      "marketCap": 6962.0
     },
     {
       "name": "Colonial",
       "ticker": "COL",
       "sector": "Inmobiliario",
-      "price": 5.17,
-      "change": -0.48,
-      "marketCap": 3173.0
+      "price": 5.14,
+      "change": -1.06,
+      "marketCap": 3154.0
     },
     {
       "name": "Logista",
       "ticker": "LOG",
       "sector": "Distribución",
-      "price": 31.02,
-      "change": 0.19,
-      "marketCap": 4095.0
+      "price": 31.04,
+      "change": 0.26,
+      "marketCap": 4098.0
     }
   ]
 }
