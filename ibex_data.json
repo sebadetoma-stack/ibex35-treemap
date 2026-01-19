@@ -1,26 +1,26 @@
 {
-  "lastUpdate": "2026-01-19T11:45:03.931311",
+  "lastUpdate": "2026-01-19T11:58:21.331305",
   "index": {
-    "value": 17559.3,
-    "change": -151.6,
-    "changePercent": -0.86
+    "value": 17555.0,
+    "change": -155.9,
+    "changePercent": -0.88
   },
   "companies": [
     {
       "name": "Inditex",
       "ticker": "ITX",
       "sector": "Consumo",
-      "price": 55.3,
-      "change": -1.0,
-      "marketCap": 172335.0
+      "price": 55.28,
+      "change": -1.04,
+      "marketCap": 172273.0
     },
     {
       "name": "Banco Santander",
       "ticker": "SAN",
       "sector": "Banca",
-      "price": 10.39,
-      "change": -1.4,
-      "marketCap": 152579.0
+      "price": 10.38,
+      "change": -1.48,
+      "marketCap": 152461.0
     },
     {
       "name": "Iberdrola",
@@ -34,49 +34,49 @@
       "name": "BBVA",
       "ticker": "BBVA",
       "sector": "Banca",
-      "price": 20.83,
-      "change": -0.57,
-      "marketCap": 118054.0
+      "price": 20.79,
+      "change": -0.76,
+      "marketCap": 117827.0
     },
     {
       "name": "Telefónica",
       "ticker": "TEF",
       "sector": "Telecom",
       "price": 3.33,
-      "change": -0.3,
-      "marketCap": 18775.0
+      "change": -0.33,
+      "marketCap": 18770.0
     },
     {
       "name": "Repsol",
       "ticker": "REP",
       "sector": "Energía",
-      "price": 15.69,
-      "change": -0.03,
-      "marketCap": 17402.0
+      "price": 15.66,
+      "change": -0.19,
+      "marketCap": 17374.0
     },
     {
       "name": "CaixaBank",
       "ticker": "CABK",
       "sector": "Banca",
-      "price": 10.56,
-      "change": -1.31,
-      "marketCap": 74023.0
+      "price": 10.57,
+      "change": -1.21,
+      "marketCap": 74093.0
     },
     {
       "name": "Amadeus",
       "ticker": "AMS",
       "sector": "Tecnología",
-      "price": 60.28,
-      "change": -0.72,
-      "marketCap": 26002.0
+      "price": 60.26,
+      "change": -0.76,
+      "marketCap": 25994.0
     },
     {
       "name": "Ferrovial",
       "ticker": "FER",
       "sector": "Construcción",
-      "price": 58.1,
-      "change": -0.79,
-      "marketCap": 41610.0
+      "price": 58.14,
+      "change": -0.72,
+      "marketCap": 41639.0
     },
     {
       "name": "Naturgy",
@@ -90,57 +90,57 @@
       "name": "ACS",
       "ticker": "ACS",
       "sector": "Construcción",
-      "price": 94.95,
-      "change": -1.66,
-      "marketCap": 24662.0
+      "price": 95.0,
+      "change": -1.61,
+      "marketCap": 24675.0
     },
     {
       "name": "Endesa",
       "ticker": "ELE",
       "sector": "Energía",
-      "price": 30.52,
-      "change": -1.17,
-      "marketCap": 31682.0
+      "price": 30.53,
+      "change": -1.13,
+      "marketCap": 31693.0
     },
     {
       "name": "Sabadell",
       "ticker": "SAB",
       "sector": "Banca",
       "price": 3.18,
-      "change": -1.7,
-      "marketCap": 15917.0
+      "change": -1.82,
+      "marketCap": 15897.0
     },
     {
       "name": "Cellnex",
       "ticker": "CLNX",
       "sector": "Telecom",
-      "price": 26.25,
-      "change": 0.88,
-      "marketCap": 17764.0
+      "price": 26.23,
+      "change": 0.81,
+      "marketCap": 17750.0
     },
     {
       "name": "IAG",
       "ticker": "IAG",
       "sector": "Transporte",
-      "price": 4.74,
-      "change": -0.06,
-      "marketCap": 21625.0
+      "price": 4.75,
+      "change": 0.19,
+      "marketCap": 21679.0
     },
     {
       "name": "Grifols",
       "ticker": "GRF",
       "sector": "Farmacia",
       "price": 10.57,
-      "change": -2.89,
-      "marketCap": 7196.0
+      "change": -2.94,
+      "marketCap": 7193.0
     },
     {
       "name": "Acciona",
       "ticker": "ANA",
       "sector": "Energía",
-      "price": 184.0,
-      "change": -1.08,
-      "marketCap": 10029.0
+      "price": 183.6,
+      "change": -1.29,
+      "marketCap": 10007.0
     },
     {
       "name": "Bankinter",
@@ -154,65 +154,65 @@
       "name": "Aena",
       "ticker": "AENA",
       "sector": "Transporte",
-      "price": 25.34,
-      "change": -0.71,
-      "marketCap": 38010.0
+      "price": 25.38,
+      "change": -0.55,
+      "marketCap": 38070.0
     },
     {
       "name": "Mapfre",
       "ticker": "MAP",
       "sector": "Seguros",
       "price": 4.24,
-      "change": -0.19,
-      "marketCap": 12999.0
+      "change": -0.28,
+      "marketCap": 12987.0
     },
     {
       "name": "Acerinox",
       "ticker": "ACX",
       "sector": "Industrial",
-      "price": 13.13,
-      "change": -0.91,
-      "marketCap": 3273.0
+      "price": 13.11,
+      "change": -1.06,
+      "marketCap": 3268.0
     },
     {
       "name": "Enagás",
       "ticker": "ENG",
       "sector": "Energía",
-      "price": 13.55,
-      "change": -2.48,
-      "marketCap": 3522.0
+      "price": 13.56,
+      "change": -2.37,
+      "marketCap": 3526.0
     },
     {
       "name": "Unicaja",
       "ticker": "UNI",
       "sector": "Banca",
-      "price": 2.8,
-      "change": -0.99,
-      "marketCap": 7186.0
+      "price": 2.79,
+      "change": -1.13,
+      "marketCap": 7176.0
     },
     {
       "name": "Meliá Hotels",
       "ticker": "MEL",
       "sector": "Turismo",
-      "price": 7.66,
-      "change": -1.48,
-      "marketCap": 1687.0
+      "price": 7.65,
+      "change": -1.61,
+      "marketCap": 1684.0
     },
     {
       "name": "Sacyr",
       "ticker": "SCYR",
       "sector": "Construcción",
       "price": 3.94,
-      "change": -1.94,
-      "marketCap": 3114.0
+      "change": -1.89,
+      "marketCap": 3115.0
     },
     {
       "name": "Solaria",
       "ticker": "SLR",
       "sector": "Energía",
-      "price": 17.48,
-      "change": -1.63,
-      "marketCap": 2184.0
+      "price": 17.44,
+      "change": -1.86,
+      "marketCap": 2179.0
     },
     {
       "name": "Fluidra",
@@ -234,9 +234,9 @@
       "name": "PharmaMar",
       "ticker": "PHM",
       "sector": "Farmacia",
-      "price": 79.8,
-      "change": -2.21,
-      "marketCap": 1366.0
+      "price": 79.75,
+      "change": -2.27,
+      "marketCap": 1365.0
     },
     {
       "name": "Indra",
@@ -250,33 +250,33 @@
       "name": "ArcelorMittal",
       "ticker": "MTS",
       "sector": "Industrial",
-      "price": 41.74,
-      "change": -1.02,
-      "marketCap": 31766.0
+      "price": 41.75,
+      "change": -1.0,
+      "marketCap": 31774.0
     },
     {
       "name": "Merlin Properties",
       "ticker": "MRL",
       "sector": "Inmobiliario",
-      "price": 12.42,
-      "change": -0.56,
-      "marketCap": 6990.0
+      "price": 12.4,
+      "change": -0.72,
+      "marketCap": 6979.0
     },
     {
       "name": "Colonial",
       "ticker": "COL",
       "sector": "Inmobiliario",
       "price": 5.14,
-      "change": -0.39,
-      "marketCap": 3154.0
+      "change": -0.48,
+      "marketCap": 3151.0
     },
     {
       "name": "Logista",
       "ticker": "LOG",
       "sector": "Distribución",
-      "price": 31.18,
-      "change": -0.7,
-      "marketCap": 4117.0
+      "price": 31.2,
+      "change": -0.64,
+      "marketCap": 4119.0
     }
   ]
 }
