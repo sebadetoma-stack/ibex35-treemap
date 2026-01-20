@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-01-19T17:00:48.110206",
+  "lastUpdate": "2026-01-20T07:51:35.045642",
   "index": {
     "value": 17665.3,
     "change": -45.6,
@@ -60,7 +60,7 @@
       "sector": "Banca",
       "price": 10.72,
       "change": 0.09,
-      "marketCap": 75074.0
+      "marketCap": 75053.0
     },
     {
       "name": "Amadeus",
@@ -92,7 +92,7 @@
       "sector": "Construcción",
       "price": 96.0,
       "change": -0.57,
-      "marketCap": 24935.0
+      "marketCap": 26080.0
     },
     {
       "name": "Endesa",
