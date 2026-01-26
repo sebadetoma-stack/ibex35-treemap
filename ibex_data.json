@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-01-23T17:03:05.293867",
+  "lastUpdate": "2026-01-26T07:50:28.476913",
   "index": {
     "value": 17544.4,
     "change": -119.0,
@@ -60,7 +60,7 @@
       "sector": "Banca",
       "price": 10.52,
       "change": -0.85,
-      "marketCap": 73652.0
+      "marketCap": 73635.0
     },
     {
       "name": "Amadeus",
