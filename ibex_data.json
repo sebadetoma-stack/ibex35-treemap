@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-02-05T17:11:31.927215",
+  "lastUpdate": "2026-02-06T07:51:20.513458",
   "index": {
     "value": 17746.3,
     "change": -356.2,
@@ -92,7 +92,7 @@
       "sector": "Construcción",
       "price": 94.25,
       "change": 0.86,
-      "marketCap": 24087.0
+      "marketCap": 24481.0
     },
     {
       "name": "Endesa",
@@ -252,7 +252,7 @@
       "sector": "Industrial",
       "price": 48.98,
       "change": 2.99,
-      "marketCap": 37276.0
+      "marketCap": 37279.0
     },
     {
       "name": "Merlin Properties",
